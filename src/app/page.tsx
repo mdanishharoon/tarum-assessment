@@ -58,6 +58,7 @@ export default function Home() {
   const promptPanelRef = useRef<PromptPanelHandle>(null);
   const historyPushedRef = useRef<Set<string>>(new Set());
   const scrollTargetRef = useRef<string | null>(null);
+  const resultsRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const timers = timersRef.current;
@@ -79,7 +80,14 @@ export default function Home() {
     scrollTargetRef.current = null;
     requestAnimationFrame(() => {
       const el = document.getElementById(`generation-${target}`);
-      if (el) {
+      const container = resultsRef.current;
+      if (!el) return;
+      if (container && container.scrollHeight > container.clientHeight) {
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const top = elRect.top - containerRect.top + container.scrollTop - 12;
+        container.scrollTo({ top, behavior: "smooth" });
+      } else {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     });
@@ -258,7 +266,11 @@ export default function Home() {
               onGenerate={handleGenerate}
             />
           </aside>
-          <section className={styles.results} aria-label="Generation results">
+          <section
+            ref={resultsRef}
+            className={styles.results}
+            aria-label="Generation results"
+          >
             {error ? (
               <div role="alert" className={styles.error}>
                 {error}

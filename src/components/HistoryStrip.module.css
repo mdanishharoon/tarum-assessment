@@ -142,7 +142,7 @@
   display: block;
   width: clamp(4.5rem, 8vw, 6.25rem);
   aspect-ratio: 1;
-  border-radius: 0.85rem;
+  border-radius: 0.55rem;
   border: none;
   padding: 0;
   overflow: hidden;

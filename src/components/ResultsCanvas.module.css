@@ -43,7 +43,7 @@
 .cell {
   position: relative;
   overflow: hidden;
-  border-radius: 1.1rem;
+  border-radius: 0.7rem;
   aspect-ratio: 3 / 4;
   background: var(--bg-surface);
   border: 1px solid var(--stroke-soft);

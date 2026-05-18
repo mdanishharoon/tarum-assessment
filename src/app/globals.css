@@ -5,7 +5,7 @@
     var(--font-sans), "Google Sans Flex", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  --color-cream: oklch(96.5% 0.012 70);
+  --color-cream: oklch(99% 0.003 70);
   --color-cream-deep: oklch(94% 0.018 65);
   --color-surface: oklch(93% 0.025 55);
   --color-surface-soft: oklch(95.5% 0.018 60);

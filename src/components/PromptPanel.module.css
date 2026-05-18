@@ -6,6 +6,9 @@
   background: var(--bg-surface);
   border-radius: 1.75rem;
   border: 1px solid var(--stroke-soft);
+  box-shadow:
+    inset 1px 1px 0 oklch(100% 0 0 / 0.3),
+    2px 2px 0 oklch(0% 0 0 / 0.05);
 }
 
 .srOnly {
