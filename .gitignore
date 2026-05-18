@@ -21,6 +21,10 @@ dist/
 # cloudflare
 .wrangler/
 
+# claude
+.claude/
+CLAUDE.md
+
 # nix
 result
 

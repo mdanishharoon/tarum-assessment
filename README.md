@@ -1,16 +1,14 @@
-# Project Name
+# tarum-assessment
 
-Brief description of what this project does and who it's for.
-
-> The repository homepage URL is automatically set to the Cloudflare Pages deployment URL on first deploy.
+Responsive AI content generation web page — frontend technical assessment.
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (static export, no SSR)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **Hosting**: Cloudflare Pages (static files)
-- **CI/CD**: GitHub Actions — deploys on push to `main`, preview URLs on PRs
+- **Styling**: Tailwind CSS v4 + CSS Modules
+- **Hosting**: Vercel
+- **CI**: GitHub Actions (lint, type-check, build)
 - **Dev Environment**: Nix (optional) + Bun
 
 ## Getting Started
@@ -41,45 +39,33 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Copy `.env.example` to `.env.local` and fill in the values:
 
-| Variable | Description | Where to get it |
-|----------|-------------|-----------------|
-| `NEXT_PUBLIC_APP_URL` | Public app URL | Your domain |
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_APP_URL` | Public app URL |
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
 | `bun run dev` | Start dev server with Turbopack |
-| `bun run build` | Production static build (`out/` directory) |
+| `bun run build` | Production build |
+| `bun run start` | Run production server locally |
 | `bun run lint` | Run ESLint |
 | `bun run format` | Format with treefmt (prettier + nixfmt) |
 | `bun run type-check` | TypeScript type checking |
 
 ## Deployment
 
-Deployments are fully automated. The Cloudflare Pages project name is derived from the GitHub repository name — no manual configuration needed beyond org-level secrets:
-
-- `CLOUDFLARE_API_TOKEN` — Cloudflare API token with Pages permissions
-- `CLOUDFLARE_ACCOUNT_ID` — your Cloudflare account ID
-- `GH_ADMIN_TOKEN` (optional) — GitHub PAT with `administration:write` scope, for auto-setting the repo homepage URL
-
-On first push to `main`, the workflow will:
-1. Create the Cloudflare Pages project automatically
-2. Deploy the static build output
-3. Set the GitHub repository homepage URL to the deployment URL (requires `GH_ADMIN_TOKEN`)
-
-PRs get preview deployments with a URL comment.
-
-See the [CI/CD SOP](https://github.com/wezero-studio/sop/blob/main/ci-cd.md) for setup details.
+Deployed on [Vercel](https://vercel.com). Connect the GitHub repo via the Vercel dashboard — production deploys run on push to `main`, and every PR gets a preview URL automatically. No workflow file is required for deploys.
 
 ## Project Structure
 
 ```
 src/
-  app/          # Next.js App Router pages and layouts
+  app/          # Next.js App Router pages, layouts, API routes
   components/   # Reusable UI components
   lib/          # Utility functions and shared logic
-public/         # Static assets (favicon, og-image, _headers)
+public/         # Static assets
 flake.nix       # Nix dev environment
 treefmt.nix     # treefmt config (nix-native)
 treefmt.toml    # treefmt config (non-nix fallback)
