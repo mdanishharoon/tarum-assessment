@@ -1,0 +1,45 @@
+.header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.1rem clamp(1rem, 3vw, 2.25rem);
+  background: var(--bg-page);
+}
+
+.start {
+  display: inline-flex;
+  align-items: center;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.end {
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+@media (max-width: 880px) {
+  .header {
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      "start end"
+      "center center";
+    row-gap: 1rem;
+  }
+  .start {
+    grid-area: start;
+  }
+  .end {
+    grid-area: end;
+  }
+  .center {
+    grid-area: center;
+  }
+}

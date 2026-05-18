@@ -1,0 +1,115 @@
+.container {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  padding: 0.75rem;
+  background: var(--bg-surface);
+  border-radius: 1.5rem;
+  border: 1px solid var(--stroke-soft);
+}
+
+.label {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-elevated);
+  border-radius: 1.1rem;
+  min-width: 7.25rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.labelTitle {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--fg-default);
+  letter-spacing: -0.01em;
+}
+
+.labelLink {
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  font-size: 0.78rem;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.labelLink:hover {
+  color: var(--accent-deep);
+}
+
+.scroller {
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--stroke) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroller::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scroller::-webkit-scrollbar-thumb {
+  background: var(--stroke);
+  border-radius: 999px;
+}
+
+.list {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0 0 0.3rem 0;
+  list-style: none;
+}
+
+.item {
+  flex: 0 0 auto;
+}
+
+.thumb {
+  display: block;
+  width: clamp(4.5rem, 8vw, 6.25rem);
+  aspect-ratio: 1;
+  border-radius: 0.85rem;
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg-surface-strong);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+
+.thumb:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.thumb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .label {
+    padding: 0.75rem 1rem;
+    min-width: 5.5rem;
+  }
+  .labelTitle {
+    font-size: 0.9rem;
+  }
+  .labelLink {
+    font-size: 0.72rem;
+  }
+}

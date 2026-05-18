@@ -1,31 +1,44 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
+const googleSansFlex = localFont({
+  variable: "--font-sans",
   display: "swap",
+  src: [
+    {
+      path: "./fonts/google-sans-flex-latin.woff2",
+      weight: "100 1000",
+      style: "normal",
+    },
+    {
+      path: "./fonts/google-sans-flex-latin-ext.woff2",
+      weight: "100 1000",
+      style: "normal",
+    },
+  ],
+  declarations: [{ prop: "font-stretch", value: "25% 151%" }],
 });
 
-// TODO: Update these values for your project
 export const metadata: Metadata = {
   title: {
-    default: "Project Name - Tagline",
-    template: "%s | Project Name",
+    default: "Forge — AI Content Studio",
+    template: "%s | Forge",
   },
-  description: "A clear, compelling description of what this project does.",
+  description:
+    "Generate images and videos from text prompts. A responsive AI content studio built with Next.js.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   openGraph: {
-    title: "Project Name - Tagline",
-    description: "A clear, compelling description of what this project does.",
+    title: "Forge — AI Content Studio",
+    description: "Generate images and videos from text prompts.",
     url: "/",
-    siteName: "Project Name",
+    siteName: "Forge",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Project Name",
+        alt: "Forge — AI Content Studio",
       },
     ],
     locale: "en_US",
@@ -33,8 +46,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Project Name - Tagline",
-    description: "A clear, compelling description of what this project does.",
+    title: "Forge — AI Content Studio",
+    description: "Generate images and videos from text prompts.",
     images: ["/og-image.png"],
   },
   icons: {
@@ -43,14 +56,28 @@ export const metadata: Metadata = {
   },
 };
 
+const themeInitScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var dark = stored ? stored === 'dark' : prefersDark;
+    if (dark) document.documentElement.classList.add('dark');
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className={googleSansFlex.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="font-sans antialiased">{children}</body>
     </html>
   );
 }

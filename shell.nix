@@ -15,7 +15,7 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
-    echo "wezero-studio dev shell loaded"
+    echo "tarum-assessment dev shell loaded"
     lefthook install
   '';
 }

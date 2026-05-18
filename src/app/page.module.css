@@ -1,0 +1,56 @@
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0 clamp(1rem, 3vw, 2.25rem) clamp(2rem, 4vw, 3rem);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(280px, 22rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+}
+
+.results {
+  min-width: 0;
+}
+
+.error {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: oklch(94% 0.05 30);
+  color: oklch(35% 0.12 30);
+  border: 1px solid oklch(85% 0.08 30);
+  font-size: 0.9rem;
+}
+
+:global(.dark) .error {
+  background: oklch(30% 0.06 30);
+  color: oklch(88% 0.08 30);
+  border-color: oklch(40% 0.1 30);
+}
+
+@media (max-width: 960px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: static;
+  }
+}
