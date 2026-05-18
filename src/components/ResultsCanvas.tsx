@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ImageIcon, PlayIcon, VideoIcon } from "./Icons";
+import { ImageIcon, VideoIcon } from "./Icons";
 import { PromptCard } from "./PromptCard";
+import { VideoPlayer } from "./VideoPlayer";
 import type {
   GenerationItem,
   GenerationMode,
@@ -168,20 +169,11 @@ export function ResultsCanvas({
                       className={styles.media}
                     />
                   ) : (
-                    <div className={styles.videoWrapper}>
-                      <video
-                        src={cell.item.url}
-                        poster={cell.item.poster}
-                        controls
-                        preload="metadata"
-                        playsInline
-                        className={styles.media}
-                        aria-label={cell.item.alt}
-                      />
-                      <span className={styles.playBadge} aria-hidden="true">
-                        <PlayIcon className={styles.playIcon} />
-                      </span>
-                    </div>
+                    <VideoPlayer
+                      src={cell.item.url}
+                      poster={cell.item.poster}
+                      alt={cell.item.alt}
+                    />
                   )}
                 </div>
               ) : null}

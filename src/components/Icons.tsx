@@ -117,3 +117,38 @@ export function PlayIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function PauseIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props} fill="currentColor" stroke="none">
+      <rect x="6" y="5" width="4" height="14" rx="1" />
+      <rect x="14" y="5" width="4" height="14" rx="1" />
+    </svg>
+  );
+}
+
+export function VolumeIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 9.5h3l4-3.5v12l-4-3.5H4z" />
+      <path d="M16 9a4 4 0 0 1 0 6" />
+    </svg>
+  );
+}
+
+export function MuteIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 9.5h3l4-3.5v12l-4-3.5H4z" />
+      <path d="M16 9.5l4 5M20 9.5l-4 5" />
+    </svg>
+  );
+}
+
+export function FullscreenIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4" />
+    </svg>
+  );
+}

@@ -28,6 +28,7 @@ type CanvasState = {
   ratio: AspectRatio;
   mode: GenerationMode;
   cells: CanvasCell[];
+  justCompleted: boolean;
 };
 
 const COMPLETION_PULSE_MS = 900;
@@ -40,44 +41,52 @@ function thumbnailFor(item: GenerationItem): string {
   return item.kind === "video" ? item.poster ?? item.url : item.url;
 }
 
+function isCanvasLoading(canvas: CanvasState): boolean {
+  return canvas.cells.some(
+    (cell) => cell.state === "submitting" || cell.state === "pending",
+  );
+}
+
 export default function Home() {
-  const [canvas, setCanvas] = useState<CanvasState | null>(null);
+  const [canvases, setCanvases] = useState<CanvasState[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [justCompleted, setJustCompleted] = useState(false);
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const completionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+  const completionTimersRef = useRef<
+    Map<string, ReturnType<typeof setTimeout>>
+  >(new Map());
+  const controllersRef = useRef<Set<AbortController>>(new Set());
   const promptPanelRef = useRef<PromptPanelHandle>(null);
   const historyPushedRef = useRef<Set<string>>(new Set());
-  const activeRequestRef = useRef<AbortController | null>(null);
+  const scrollTargetRef = useRef<string | null>(null);
 
   useEffect(() => {
+    const timers = timersRef.current;
+    const completionTimers = completionTimersRef.current;
+    const controllers = controllersRef.current;
     return () => {
-      for (const timer of timersRef.current) clearTimeout(timer);
-      if (completionTimerRef.current) clearTimeout(completionTimerRef.current);
-      activeRequestRef.current?.abort();
+      for (const timer of timers) clearTimeout(timer);
+      timers.clear();
+      for (const timer of completionTimers.values()) clearTimeout(timer);
+      completionTimers.clear();
+      for (const controller of controllers) controller.abort();
+      controllers.clear();
     };
   }, []);
 
-  function clearScheduled() {
-    for (const timer of timersRef.current) clearTimeout(timer);
-    timersRef.current = [];
-    if (completionTimerRef.current) {
-      clearTimeout(completionTimerRef.current);
-      completionTimerRef.current = null;
-    }
-    activeRequestRef.current?.abort();
-    activeRequestRef.current = null;
-  }
-
-  const isGenerating =
-    canvas?.cells.some(
-      (cell) => cell.state === "submitting" || cell.state === "pending",
-    ) ?? false;
+  useEffect(() => {
+    const target = scrollTargetRef.current;
+    if (!target) return;
+    scrollTargetRef.current = null;
+    requestAnimationFrame(() => {
+      const el = document.getElementById(`generation-${target}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }, [canvases.length]);
 
   async function handleGenerate(request: GenerationRequest) {
     setError(null);
-    setJustCompleted(false);
-    clearScheduled();
 
     const generationId = `gen-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const submittedAt = Date.now();
@@ -92,7 +101,7 @@ export default function Home() {
       }),
     );
 
-    setCanvas({
+    const newCanvas: CanvasState = {
       generationId,
       prompt: request.prompt,
       model: request.model,
@@ -100,10 +109,14 @@ export default function Home() {
       ratio: request.ratio,
       mode: request.mode,
       cells: submittingCells,
-    });
+      justCompleted: false,
+    };
+
+    scrollTargetRef.current = generationId;
+    setCanvases((prev) => [...prev, newCanvas]);
 
     const controller = new AbortController();
-    activeRequestRef.current = controller;
+    controllersRef.current.add(controller);
 
     try {
       const response = await fetch("/api/generate", {
@@ -125,40 +138,52 @@ export default function Home() {
         item,
         startedAt,
       }));
-      setCanvas((prev) => ({
-        generationId: prev?.generationId ?? generationId,
-        prompt: data.prompt,
-        model: data.model,
-        modelLabel: labelForModel(data.model),
-        ratio: data.ratio,
-        mode: data.mode,
-        cells: initialCells,
-      }));
+
+      setCanvases((prev) =>
+        prev.map((entry) =>
+          entry.generationId === generationId
+            ? {
+                ...entry,
+                prompt: data.prompt,
+                model: data.model,
+                modelLabel: labelForModel(data.model),
+                ratio: data.ratio,
+                mode: data.mode,
+                cells: initialCells,
+              }
+            : entry,
+        ),
+      );
 
       data.items.forEach((item, index) => {
         const timer = setTimeout(() => {
-          setCanvas((prev) => {
-            if (!prev) return prev;
-            const next = prev.cells.slice();
-            next[index] = { state: "done", item };
-            const allDone = next.every((cell) => cell.state === "done");
+          timersRef.current.delete(timer);
+          setCanvases((prev) => {
+            const idx = prev.findIndex(
+              (entry) => entry.generationId === generationId,
+            );
+            if (idx === -1) return prev;
+            const target = prev[idx];
+            const nextCells = target.cells.slice();
+            nextCells[index] = { state: "done", item };
+            const allDone = nextCells.every((cell) => cell.state === "done");
 
             if (
-              !historyPushedRef.current.has(prev.generationId) &&
-              next.some((cell) => cell.state === "done")
+              !historyPushedRef.current.has(generationId) &&
+              nextCells.some((cell) => cell.state === "done")
             ) {
-              historyPushedRef.current.add(prev.generationId);
-              const firstDone = next.find(
+              historyPushedRef.current.add(generationId);
+              const firstDone = nextCells.find(
                 (cell): cell is Extract<CanvasCell, { state: "done" }> =>
                   cell.state === "done",
               );
               if (firstDone) {
                 const entry: HistoryEntry = {
-                  id: prev.generationId,
-                  prompt: prev.prompt,
-                  model: prev.model,
-                  ratio: prev.ratio,
-                  mode: prev.mode,
+                  id: generationId,
+                  prompt: target.prompt,
+                  model: target.model,
+                  ratio: target.ratio,
+                  mode: target.mode,
                   thumbnailUrl: thumbnailFor(firstDone.item),
                   createdAt: Date.now(),
                 };
@@ -166,21 +191,31 @@ export default function Home() {
               }
             }
 
+            let nextEntry: CanvasState = { ...target, cells: nextCells };
+
             if (allDone) {
-              setJustCompleted(true);
-              if (completionTimerRef.current) {
-                clearTimeout(completionTimerRef.current);
-              }
-              completionTimerRef.current = setTimeout(() => {
-                setJustCompleted(false);
-                completionTimerRef.current = null;
+              nextEntry = { ...nextEntry, justCompleted: true };
+              const existingPulse = completionTimersRef.current.get(generationId);
+              if (existingPulse) clearTimeout(existingPulse);
+              const pulseTimer = setTimeout(() => {
+                completionTimersRef.current.delete(generationId);
+                setCanvases((curr) =>
+                  curr.map((c) =>
+                    c.generationId === generationId
+                      ? { ...c, justCompleted: false }
+                      : c,
+                  ),
+                );
               }, COMPLETION_PULSE_MS);
+              completionTimersRef.current.set(generationId, pulseTimer);
             }
 
-            return { ...prev, cells: next };
+            const updated = prev.slice();
+            updated[idx] = nextEntry;
+            return updated;
           });
         }, item.delay);
-        timersRef.current.push(timer);
+        timersRef.current.add(timer);
       });
     } catch (cause) {
       if (cause instanceof DOMException && cause.name === "AbortError") {
@@ -190,11 +225,11 @@ export default function Home() {
         return;
       }
       setError(cause instanceof Error ? cause.message : "Generation failed. Try again.");
-      setCanvas(null);
+      setCanvases((prev) =>
+        prev.filter((entry) => entry.generationId !== generationId),
+      );
     } finally {
-      if (activeRequestRef.current === controller) {
-        activeRequestRef.current = null;
-      }
+      controllersRef.current.delete(controller);
     }
   }
 
@@ -221,7 +256,6 @@ export default function Home() {
             <PromptPanel
               ref={promptPanelRef}
               onGenerate={handleGenerate}
-              isGenerating={isGenerating}
             />
           </aside>
           <section className={styles.results} aria-label="Generation results">
@@ -230,17 +264,25 @@ export default function Home() {
                 {error}
               </div>
             ) : null}
-            {canvas ? (
-              <ResultsCanvas
-                cells={canvas.cells}
-                generationId={canvas.generationId}
-                prompt={canvas.prompt}
-                modelLabel={canvas.modelLabel}
-                isLoading={isGenerating}
-                justCompleted={justCompleted}
-              />
-            ) : (
+            {canvases.length === 0 ? (
               <EmptyState />
+            ) : (
+              canvases.map((canvas) => (
+                <div
+                  key={canvas.generationId}
+                  id={`generation-${canvas.generationId}`}
+                  className={styles.generationSlot}
+                >
+                  <ResultsCanvas
+                    cells={canvas.cells}
+                    generationId={canvas.generationId}
+                    prompt={canvas.prompt}
+                    modelLabel={canvas.modelLabel}
+                    isLoading={isCanvasLoading(canvas)}
+                    justCompleted={canvas.justCompleted}
+                  />
+                </div>
+              ))
             )}
           </section>
         </div>

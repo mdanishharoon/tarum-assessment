@@ -3,11 +3,13 @@
 import {
   forwardRef,
   useImperativeHandle,
+  useRef,
   useState,
   type FormEvent,
 } from "react";
 import { Accordion } from "./Accordion";
-import { SparklesIcon } from "./Icons";
+import SparklesIcon from "./icons/sparkles-icon";
+import type { AnimatedIconHandle } from "./icons/types";
 import { ModeTabs } from "./ModeTabs";
 import { PillSelect } from "./PillSelect";
 import styles from "./PromptPanel.module.css";
@@ -16,7 +18,6 @@ import type { AspectRatio, GenerationMode, GenerationRequest } from "@/lib/types
 
 type PromptPanelProps = {
   onGenerate: (request: GenerationRequest) => void;
-  isGenerating: boolean;
 };
 
 export type PromptPanelHandle = {
@@ -57,13 +58,14 @@ function isModelId(value: string): value is ModelId {
 }
 
 export const PromptPanel = forwardRef<PromptPanelHandle, PromptPanelProps>(
-  function PromptPanel({ onGenerate, isGenerating }, ref) {
+  function PromptPanel({ onGenerate }, ref) {
     const [mode, setMode] = useState<GenerationMode>("image");
     const [prompt, setPrompt] = useState("");
     const [count, setCount] = useState<CountValue>(4);
     const [ratio, setRatio] = useState<AspectRatio>("1:1");
     const [model, setModel] = useState<ModelId>(MODELS[0].id);
     const [style, setStyle] = useState<(typeof STYLE_PRESETS)[number]>("Photoreal");
+    const sparkleRef = useRef<AnimatedIconHandle>(null);
 
     useImperativeHandle(
       ref,
@@ -81,7 +83,7 @@ export const PromptPanel = forwardRef<PromptPanelHandle, PromptPanelProps>(
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();
       const trimmed = prompt.trim();
-      if (!trimmed || isGenerating) return;
+      if (!trimmed) return;
       onGenerate({ prompt: trimmed, mode, count, ratio, model });
     }
 
@@ -110,11 +112,20 @@ export const PromptPanel = forwardRef<PromptPanelHandle, PromptPanelProps>(
             <button
               type="submit"
               className={styles.generate}
-              disabled={!prompt.trim() || isGenerating}
+              disabled={!prompt.trim()}
               aria-label="Generate content"
+              onMouseEnter={() => sparkleRef.current?.startAnimation()}
+              onMouseLeave={() => sparkleRef.current?.stopAnimation()}
+              onFocus={() => sparkleRef.current?.startAnimation()}
+              onBlur={() => sparkleRef.current?.stopAnimation()}
             >
-              <SparklesIcon className={styles.generateIcon} />
-              <span>{isGenerating ? "Generating…" : "Generate"}</span>
+              <SparklesIcon
+                ref={sparkleRef}
+                size={20}
+                strokeWidth={2}
+                className={styles.generateIcon}
+              />
+              <span>Generate</span>
             </button>
           </div>
         </div>

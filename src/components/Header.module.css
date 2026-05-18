@@ -1,6 +1,6 @@
 .header {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 1.25rem;
   padding: 1.1rem clamp(1rem, 3vw, 2.25rem);
@@ -10,6 +10,7 @@
 .start {
   display: inline-flex;
   align-items: center;
+  justify-self: start;
 }
 
 .center {
@@ -23,9 +24,10 @@
   display: inline-flex;
   justify-content: flex-end;
   align-items: center;
+  justify-self: end;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 1024px) {
   .header {
     grid-template-columns: auto auto;
     grid-template-areas:

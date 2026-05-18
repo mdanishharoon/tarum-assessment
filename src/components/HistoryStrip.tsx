@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { historyItems as seedItems } from "@/lib/history";
 import {
@@ -32,6 +32,17 @@ function toDisplay(entry: HistoryEntry): DisplayItem {
 
 export function HistoryStrip({ onPick }: HistoryStripProps) {
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
+  const [fadeLeft, setFadeLeft] = useState(false);
+  const [fadeRight, setFadeRight] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef({
+    pointerId: -1,
+    startX: 0,
+    startScroll: 0,
+    moved: false,
+  });
+  const suppressClickRef = useRef(false);
 
   useEffect(() => {
     setEntries(loadHistory());
@@ -50,6 +61,84 @@ export function HistoryStrip({ onPick }: HistoryStripProps) {
     return [...stored, ...fill];
   }, [entries]);
 
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    function update() {
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 1) {
+        setFadeLeft(false);
+        setFadeRight(false);
+        return;
+      }
+      setFadeLeft(el.scrollLeft > 1);
+      setFadeRight(el.scrollLeft < maxScroll - 1);
+    }
+
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    const resizeObserver = new ResizeObserver(update);
+    resizeObserver.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", update);
+      resizeObserver.disconnect();
+    };
+  }, [items.length]);
+
+  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    const el = scrollerRef.current;
+    if (!el) return;
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScroll: el.scrollLeft,
+      moved: false,
+    };
+    el.setPointerCapture(event.pointerId);
+    setIsDragging(true);
+  }
+
+  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (
+      event.pointerType !== "mouse" ||
+      event.pointerId !== dragRef.current.pointerId
+    ) {
+      return;
+    }
+    const el = scrollerRef.current;
+    if (!el) return;
+    const dx = event.clientX - dragRef.current.startX;
+    if (!dragRef.current.moved && Math.abs(dx) > 4) {
+      dragRef.current.moved = true;
+    }
+    el.scrollLeft = dragRef.current.startScroll - dx;
+  }
+
+  function endDrag(event: React.PointerEvent<HTMLDivElement>) {
+    if (
+      event.pointerType !== "mouse" ||
+      event.pointerId !== dragRef.current.pointerId
+    ) {
+      return;
+    }
+    const el = scrollerRef.current;
+    if (el && el.hasPointerCapture(event.pointerId)) {
+      el.releasePointerCapture(event.pointerId);
+    }
+    if (dragRef.current.moved) {
+      suppressClickRef.current = true;
+      window.setTimeout(() => {
+        suppressClickRef.current = false;
+      }, 80);
+    }
+    dragRef.current.pointerId = -1;
+    setIsDragging(false);
+  }
+
   return (
     <section aria-label="Generation history" className={styles.container}>
       <div className={styles.label}>
@@ -63,11 +152,25 @@ export function HistoryStrip({ onPick }: HistoryStripProps) {
           View All
         </button>
       </div>
-      <div className={styles.scroller}>
+      <div
+        className={styles.scrollWrap}
+        data-fade-left={fadeLeft ? "true" : "false"}
+        data-fade-right={fadeRight ? "true" : "false"}
+      >
+        <div
+          ref={scrollerRef}
+          className={styles.scroller}
+          data-dragging={isDragging ? "true" : "false"}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+        >
         <ul className={styles.list}>
           {items.map((item) => {
             const interactive = Boolean(item.entry && onPick);
             const handleClick = () => {
+              if (suppressClickRef.current) return;
               if (item.entry && onPick) onPick(item.entry);
             };
             return (
@@ -97,6 +200,7 @@ export function HistoryStrip({ onPick }: HistoryStripProps) {
             );
           })}
         </ul>
+        </div>
       </div>
     </section>
   );

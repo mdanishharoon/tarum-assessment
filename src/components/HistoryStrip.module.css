@@ -56,28 +56,81 @@
   outline-offset: 3px;
 }
 
+.scrollWrap {
+  position: relative;
+  min-width: 0;
+}
+
+.scrollWrap::before,
+.scrollWrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.scrollWrap::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--bg-surface) 0%,
+    var(--bg-surface) 25%,
+    transparent 100%
+  );
+}
+
+.scrollWrap::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--bg-surface) 0%,
+    var(--bg-surface) 25%,
+    transparent 100%
+  );
+}
+
+.scrollWrap[data-fade-left="true"]::before {
+  opacity: 1;
+}
+
+.scrollWrap[data-fade-right="true"]::after {
+  opacity: 1;
+}
+
 .scroller {
   min-width: 0;
   overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--stroke) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-x;
 }
 
 .scroller::-webkit-scrollbar {
-  height: 6px;
+  display: none;
 }
 
-.scroller::-webkit-scrollbar-thumb {
-  background: var(--stroke);
-  border-radius: 999px;
+.scroller[data-dragging="true"] {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.scroller[data-dragging="true"] .thumb {
+  cursor: grabbing;
 }
 
 .list {
   display: flex;
   gap: 0.6rem;
   margin: 0;
-  padding: 0 0 0.3rem 0;
+  padding: 0;
   list-style: none;
 }
 
