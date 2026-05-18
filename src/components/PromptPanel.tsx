@@ -8,10 +8,12 @@ import {
   type FormEvent,
 } from "react";
 import { Accordion } from "./Accordion";
+import { ModelIcon, StackIcon } from "./Icons";
 import SparklesIcon from "./icons/sparkles-icon";
 import type { AnimatedIconHandle } from "./icons/types";
 import { ModeTabs } from "./ModeTabs";
-import { PillSelect } from "./PillSelect";
+import { RatioGlyph } from "./SegmentedControl";
+import { SettingChip } from "./SettingChip";
 import styles from "./PromptPanel.module.css";
 import { ASPECT_RATIOS, IMAGE_COUNTS, MODELS } from "@/lib/ratios";
 import type { AspectRatio, GenerationMode, GenerationRequest } from "@/lib/types";
@@ -43,14 +45,19 @@ type CountValue = (typeof IMAGE_COUNTS)[number];
 
 const COUNT_OPTIONS = IMAGE_COUNTS.map((value) => ({
   value: String(value) as `${CountValue}`,
-  label: `${value} ${value === 1 ? "image" : "images"}`,
+  label: String(value),
 }));
 
-const RATIO_OPTIONS = ASPECT_RATIOS.map((value) => ({ value, label: value }));
+const RATIO_OPTIONS = ASPECT_RATIOS.map((value) => ({
+  value,
+  label: value,
+  icon: <RatioGlyph ratio={value} />,
+}));
 
 const MODEL_OPTIONS = MODELS.map((option) => ({
   value: option.id,
-  label: option.label,
+  label: option.short,
+  hint: option.label,
 }));
 
 function isModelId(value: string): value is ModelId {
@@ -130,25 +137,30 @@ export const PromptPanel = forwardRef<PromptPanelHandle, PromptPanelProps>(
           </div>
         </div>
 
-        <div className={styles.controls}>
-          <PillSelect
-            label="Number of images"
-            hideLabel
+        <div className={styles.chipsRow}>
+          <SettingChip
+            ariaLabel="Number of images"
+            popoverHeading="Count"
+            displayValue={String(count)}
+            displayIcon={<StackIcon />}
             value={String(count) as `${CountValue}`}
             options={COUNT_OPTIONS}
             onChange={(value) => setCount(Number(value) as CountValue)}
           />
-          <PillSelect
-            label="Aspect ratio"
-            hideLabel
+          <SettingChip
+            ariaLabel="Aspect ratio"
+            popoverHeading="Aspect ratio"
+            displayValue={ratio}
+            displayIcon={<RatioGlyph ratio={ratio} />}
             value={ratio}
             options={RATIO_OPTIONS}
             onChange={setRatio}
           />
-          <PillSelect
-            label="Model"
-            hideLabel
-            prefix="Model:"
+          <SettingChip
+            ariaLabel="Model"
+            popoverHeading="Model"
+            displayValue={MODELS.find((m) => m.id === model)?.short ?? "Model"}
+            displayIcon={<ModelIcon />}
             value={model}
             options={MODEL_OPTIONS}
             onChange={(value) => setModel(value as ModelId)}

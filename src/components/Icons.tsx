@@ -110,6 +110,24 @@ export function ChevronDownIcon(props: IconProps) {
   );
 }
 
+export function StackIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="3.5" y="3.5" width="13" height="13" rx="2.5" />
+      <rect x="7.5" y="7.5" width="13" height="13" rx="2.5" />
+    </svg>
+  );
+}
+
+export function ModelIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 3 L21 12 L12 21 L3 12 Z" />
+      <path d="M7.5 12 L12 7.5 L16.5 12 L12 16.5 Z" />
+    </svg>
+  );
+}
+
 export function PlayIcon(props: IconProps) {
   return (
     <svg {...base} {...props} fill="currentColor" stroke="none">
