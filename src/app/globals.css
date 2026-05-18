@@ -47,6 +47,9 @@
   --accent-deep: var(--color-coral-deep);
   --stroke: var(--color-stroke);
   --stroke-soft: var(--color-stroke-soft);
+  --bg-error: oklch(94% 0.05 30);
+  --fg-error: oklch(35% 0.12 30);
+  --stroke-error: oklch(85% 0.08 30);
 }
 
 .dark {
@@ -65,6 +68,9 @@
   --accent-deep: oklch(80% 0.16 32);
   --stroke: oklch(32% 0.015 60);
   --stroke-soft: oklch(28% 0.012 60);
+  --bg-error: oklch(30% 0.06 30);
+  --fg-error: oklch(88% 0.08 30);
+  --stroke-error: oklch(40% 0.1 30);
 }
 
 html,

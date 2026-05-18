@@ -34,16 +34,10 @@
   margin-bottom: 1rem;
   padding: 0.85rem 1rem;
   border-radius: 1rem;
-  background: oklch(94% 0.05 30);
-  color: oklch(35% 0.12 30);
-  border: 1px solid oklch(85% 0.08 30);
+  background: var(--bg-error);
+  color: var(--fg-error);
+  border: 1px solid var(--stroke-error);
   font-size: 0.9rem;
-}
-
-:global(.dark) .error {
-  background: oklch(30% 0.06 30);
-  color: oklch(88% 0.08 30);
-  border-color: oklch(40% 0.1 30);
 }
 
 @media (max-width: 960px) {

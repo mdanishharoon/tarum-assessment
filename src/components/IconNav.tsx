@@ -22,24 +22,24 @@ const items = [
 export function IconNav() {
   const [active, setActive] = useState<(typeof items)[number]["id"]>("home");
   const activeIndex = items.findIndex((item) => item.id === active);
+  const progress = items.length > 1 ? activeIndex / (items.length - 1) : 0;
 
   return (
     <nav aria-label="Workspace sections" className={styles.wrapper}>
       <div className={styles.progressTrack} aria-hidden="true">
         <span
           className={styles.progressFill}
-          style={{ left: `calc(${(activeIndex / (items.length - 1)) * 100}% - 1.25rem)` }}
+          style={{ "--progress": progress } as React.CSSProperties}
         />
       </div>
-      <ul className={styles.list} role="tablist">
+      <ul className={styles.list}>
         {items.map(({ id, label, Icon }) => {
           const isActive = id === active;
           return (
             <li key={id}>
               <button
                 type="button"
-                role="tab"
-                aria-selected={isActive}
+                aria-current={isActive ? "page" : undefined}
                 aria-label={label}
                 onClick={() => setActive(id)}
                 className={cn(styles.item, isActive && styles.itemActive)}

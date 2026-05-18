@@ -36,6 +36,31 @@
   box-shadow: 0 0 0 4px oklch(72% 0.13 35 / 0.08);
 }
 
+.card[data-state="just-completed"] {
+  animation: completionPulse 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes completionPulse {
+  0% {
+    box-shadow: 0 0 0 0 oklch(72% 0.13 35 / 0.32);
+    border-color: var(--accent-soft);
+  }
+  60% {
+    box-shadow: 0 0 0 8px oklch(72% 0.13 35 / 0);
+    border-color: var(--accent-soft);
+  }
+  100% {
+    box-shadow: 0 0 0 0 oklch(72% 0.13 35 / 0);
+    border-color: var(--stroke-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card[data-state="just-completed"] {
+    animation: none;
+  }
+}
+
 .text {
   margin: 0;
   white-space: pre-wrap;

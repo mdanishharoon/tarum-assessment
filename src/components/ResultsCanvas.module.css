@@ -3,6 +3,24 @@
   grid-template-columns: minmax(180px, 1fr) minmax(0, 4fr);
   gap: 0.85rem;
   align-items: stretch;
+  animation: canvasEnter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes canvasEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    animation: none;
+  }
 }
 
 .infoColumn {
@@ -29,16 +47,14 @@
   aspect-ratio: 3 / 4;
   background: var(--bg-surface);
   border: 1px solid var(--stroke-soft);
+  animation: cellEnter 540ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--cell-index, 0) * 60ms);
 }
 
-.cell:has(.media) {
-  animation: rise 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes rise {
+@keyframes cellEnter {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.98);
+    transform: translateY(8px) scale(0.96);
   }
   to {
     opacity: 1;
@@ -47,8 +63,48 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cell:has(.media) {
+  .cell {
     animation: none;
+  }
+}
+
+.mediaLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.02);
+  transition:
+    opacity 1100ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.cell[data-state="done"] .mediaLayer {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.skeletonLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  filter: blur(0);
+  transition:
+    opacity 820ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 820ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  will-change: opacity, filter;
+}
+
+.cell[data-state="done"] .skeletonLayer {
+  opacity: 0;
+  filter: blur(14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mediaLayer,
+  .skeletonLayer {
+    transition: none;
   }
 }
 
@@ -86,24 +142,105 @@
 .skeleton {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(120% 80% at 25% 30%, oklch(98% 0.005 70 / 0.55), transparent 65%),
-    linear-gradient(
-      135deg,
-      var(--bg-surface-soft) 0%,
-      var(--bg-surface) 45%,
-      var(--bg-surface-strong) 100%
-    );
-  background-size: 220% 220%, 100% 100%;
-  animation: drift 6s ease-in-out infinite alternate;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--bg-surface-soft) 0%,
+    var(--bg-surface) 50%,
+    var(--bg-surface-strong) 100%
+  );
 }
 
-@keyframes drift {
-  from {
-    background-position: 0% 0%, 0 0;
+.skeleton::before,
+.skeleton::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0.72;
+  will-change: transform;
+}
+
+.skeleton::before {
+  width: 78%;
+  height: 78%;
+  top: -18%;
+  left: -18%;
+  background: var(--accent-soft);
+  animation: blobDriftA var(--blob-a-duration, 7s) var(--blob-a-delay, 0s)
+    ease-in-out infinite var(--blob-a-direction, alternate);
+}
+
+.skeleton::after {
+  width: 68%;
+  height: 68%;
+  bottom: -22%;
+  right: -16%;
+  background: var(--bg-surface-strong);
+  animation: blobDriftB var(--blob-b-duration, 9s) var(--blob-b-delay, -2.5s)
+    ease-in-out infinite var(--blob-b-direction, alternate);
+}
+
+@keyframes blobDriftA {
+  0% {
+    transform: translate(0, 0) scale(1);
   }
-  to {
-    background-position: 100% 100%, 0 0;
+  25% {
+    transform: translate(38%, 22%) scale(1.18);
+  }
+  50% {
+    transform: translate(12%, 56%) scale(0.9);
+  }
+  75% {
+    transform: translate(52%, 32%) scale(1.1);
+  }
+  100% {
+    transform: translate(22%, 62%) scale(0.95);
+  }
+}
+
+@keyframes blobDriftB {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-42%, -28%) scale(1.22);
+  }
+  50% {
+    transform: translate(-18%, -58%) scale(0.88);
+  }
+  75% {
+    transform: translate(-48%, -20%) scale(1.14);
+  }
+  100% {
+    transform: translate(-28%, -52%) scale(1.02);
+  }
+}
+
+.skeletonLayer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    oklch(100% 0 0 / 0.22) 50%,
+    transparent 70%
+  );
+  background-size: 280% 100%;
+  background-repeat: no-repeat;
+  background-position: 220% 0;
+  animation: sheenSweep var(--sheen-duration, 3.6s) var(--sheen-delay, 0s) linear
+    infinite;
+  pointer-events: none;
+}
+
+@keyframes sheenSweep {
+  0% {
+    background-position: 220% 0;
+  }
+  100% {
+    background-position: -120% 0;
   }
 }
 
@@ -138,7 +275,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton {
+  .skeleton::before,
+  .skeleton::after,
+  .skeletonLayer::after {
     animation: none;
   }
 }
