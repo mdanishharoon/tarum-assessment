@@ -58,6 +58,55 @@ export function FolderIcon(props: IconProps) {
   );
 }
 
+const baseSolid = {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  fill: "currentColor",
+  stroke: "none",
+  "aria-hidden": true,
+};
+
+export function HomeIconSolid(props: IconProps) {
+  return (
+    <svg {...baseSolid} {...props}>
+      <path d="M11.36 3.27a1 1 0 0 1 1.28 0l8.5 7.08A1 1 0 0 1 21.5 11v8.25A1.75 1.75 0 0 1 19.75 21H15a1 1 0 0 1-1-1v-5h-4v5a1 1 0 0 1-1 1H4.25A1.75 1.75 0 0 1 2.5 19.25V11a1 1 0 0 1 .36-.77z" />
+    </svg>
+  );
+}
+
+export function ImageIconSolid(props: IconProps) {
+  return (
+    <svg {...baseSolid} {...props}>
+      <path d="M5 4.25h14A2.75 2.75 0 0 1 21.75 7v10A2.75 2.75 0 0 1 19 19.75H5A2.75 2.75 0 0 1 2.25 17V7A2.75 2.75 0 0 1 5 4.25Zm14 14a1.25 1.25 0 0 0 1.18-.84l-4.46-4.46a1 1 0 0 0-1.32-.08l-3.16 2.52-2.32-2.32a1 1 0 0 0-1.32-.08L3.83 16.7a1.25 1.25 0 0 0 1.17.8Zm-9.5-8.25a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Z" clipRule="evenodd" fillRule="evenodd" />
+    </svg>
+  );
+}
+
+export function VideoIconSolid(props: IconProps) {
+  return (
+    <svg {...baseSolid} {...props}>
+      <path d="M4.5 5.25h10A2.25 2.25 0 0 1 16.75 7.5v9a2.25 2.25 0 0 1-2.25 2.25h-10A2.25 2.25 0 0 1 2.25 16.5v-9A2.25 2.25 0 0 1 4.5 5.25Zm13.81 1.06A1 1 0 0 1 19.75 6L21.4 7.16a1 1 0 0 1 .35.76v8.16a1 1 0 0 1-.35.76L19.75 18a1 1 0 0 1-1.5-.86V6.86a1 1 0 0 1 .06-.35Z" />
+    </svg>
+  );
+}
+
+export function WandIconSolid(props: IconProps) {
+  return (
+    <svg {...baseSolid} {...props}>
+      <path d="M19.34 3a.75.75 0 0 1 .75.75v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5a.75.75 0 0 1-1.5 0v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5A.75.75 0 0 1 19.34 3Z" />
+      <path d="M14.13 5.6a2.25 2.25 0 0 1 3.18 0l1.09 1.1a2.25 2.25 0 0 1 0 3.17L7.06 21.2a1 1 0 0 1-.43.25l-3.4 1a.75.75 0 0 1-.93-.93l1-3.4a1 1 0 0 1 .25-.43Zm.66 2.7-1.06 1.06 1.78 1.78L16.57 10.1Z" />
+    </svg>
+  );
+}
+
+export function FolderIconSolid(props: IconProps) {
+  return (
+    <svg {...baseSolid} {...props}>
+      <path d="M4.5 4.5h4.69a2 2 0 0 1 1.42.59L12.5 7h7a2.25 2.25 0 0 1 2.25 2.25v8.5A2.25 2.25 0 0 1 19.5 20h-15A2.25 2.25 0 0 1 2.25 17.75v-11A2.25 2.25 0 0 1 4.5 4.5Z" />
+    </svg>
+  );
+}
+
 export function GalleryIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>

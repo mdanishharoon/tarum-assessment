@@ -1,22 +1,102 @@
 .container {
+  position: relative;
+  padding: 0.7rem;
+  background: var(--bg-inset);
+  border-radius: 1.4rem;
+  border: 1px solid var(--stroke-soft);
+  overflow: hidden;
+}
+
+.dropdown {
+  box-shadow:
+    inset 0 2px 5px var(--inset-shadow),
+    inset 0 -1px 0 var(--slab-highlight);
+}
+
+.content {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 0.85rem;
-  padding: 0.75rem;
-  background: var(--bg-surface);
-  border-radius: 1.5rem;
-  border: 1px solid var(--stroke-soft);
+  min-width: 0;
+  animation: contentEnter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.content[data-direction="right"] {
+  animation-name: contentEnterRight;
+}
+
+.content[data-direction="left"] {
+  animation-name: contentEnterLeft;
+}
+
+.content[data-direction="enter"] {
+  animation-name: contentEnter;
+}
+
+@keyframes contentEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contentEnterRight {
+  from {
+    opacity: 0;
+    transform: translateX(36px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes contentEnterLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-36px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content,
+  .content[data-direction="right"],
+  .content[data-direction="left"],
+  .content[data-direction="enter"] {
+    animation: contentEnterReduced 180ms ease both;
+  }
+}
+
+@keyframes contentEnterReduced {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .label {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.2rem;
-  padding: 1rem 1.5rem;
+  gap: 0.18rem;
+  padding: 0.95rem 1.4rem;
   background: var(--bg-elevated);
-  border-radius: 1.1rem;
-  min-width: 7.25rem;
+  border-radius: 1.05rem;
+  min-width: 7.1rem;
   box-shadow: var(--shadow-soft);
 }
 
@@ -105,25 +185,29 @@
 .scroller {
   min-width: 0;
   overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  cursor: grab;
-  user-select: none;
   touch-action: pan-x;
+  padding: 4px 2px 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--stroke) transparent;
 }
 
 .scroller::-webkit-scrollbar {
-  display: none;
+  height: 8px;
 }
 
-.scroller[data-dragging="true"] {
-  cursor: grabbing;
-  scroll-behavior: auto;
+.scroller::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.scroller[data-dragging="true"] .thumb {
-  cursor: grabbing;
+.scroller::-webkit-scrollbar-thumb {
+  background: var(--stroke);
+  border-radius: 999px;
+}
+
+.scroller::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-faint);
 }
 
 .list {
@@ -136,11 +220,30 @@
 
 .item {
   flex: 0 0 auto;
+  animation: itemEnter 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(min(var(--item-index, 0), 12) * 28ms + 80ms);
+}
+
+@keyframes itemEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    animation: none;
+  }
 }
 
 .thumb {
   display: block;
-  width: clamp(4.5rem, 8vw, 6.25rem);
+  width: clamp(4.25rem, 7.75vw, 6rem);
   aspect-ratio: 1;
   border-radius: 0.55rem;
   border: none;

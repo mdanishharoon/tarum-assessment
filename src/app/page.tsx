@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
 import { Header } from "@/components/Header";
 import { HistoryStrip } from "@/components/HistoryStrip";
+import type { HistoryTab } from "@/components/IconNav";
 import {
   PromptPanel,
   type PromptPanelHandle,
@@ -47,9 +48,31 @@ function isCanvasLoading(canvas: CanvasState): boolean {
   );
 }
 
+const HISTORY_PANEL_ID = "history-panel";
+
+const TAB_ORDER: readonly HistoryTab[] = [
+  "home",
+  "image",
+  "video",
+  "enhance",
+  "library",
+];
+
+const TAB_MAP: Record<HistoryTab, { label: string; filter: GenerationMode | null }> = {
+  home: { label: "History", filter: null },
+  image: { label: "Image history", filter: "image" },
+  video: { label: "Video history", filter: "video" },
+  enhance: { label: "Enhance", filter: null },
+  library: { label: "Library", filter: null },
+};
+
+type SlideDirection = "enter" | "left" | "right";
+
 export default function Home() {
   const [canvases, setCanvases] = useState<CanvasState[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [historyTab, setHistoryTab] = useState<HistoryTab | null>("home");
+  const prevTabRef = useRef<HistoryTab | null>(null);
   const timersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const completionTimersRef = useRef<
     Map<string, ReturnType<typeof setTimeout>>
@@ -59,6 +82,14 @@ export default function Home() {
   const historyPushedRef = useRef<Set<string>>(new Set());
   const scrollTargetRef = useRef<string | null>(null);
   const resultsRef = useRef<HTMLElement>(null);
+  const navButtonRef = useRef<Record<HistoryTab, HTMLButtonElement | null>>({
+    home: null,
+    image: null,
+    video: null,
+    enhance: null,
+    library: null,
+  });
+  const lastTabRef = useRef<HistoryTab | null>(null);
 
   useEffect(() => {
     const timers = timersRef.current;
@@ -92,6 +123,44 @@ export default function Home() {
       }
     });
   }, [canvases.length]);
+
+  const handleSelectTab = useCallback((tab: HistoryTab) => {
+    setHistoryTab((current) => (current === tab ? null : tab));
+  }, []);
+
+  const handleCloseHistory = useCallback(() => {
+    setHistoryTab(null);
+    const previous = lastTabRef.current;
+    if (previous && navButtonRef.current[previous]) {
+      requestAnimationFrame(() => {
+        navButtonRef.current[previous]?.focus({ preventScroll: true });
+      });
+    }
+  }, []);
+
+  let slideDirection: SlideDirection = "enter";
+  if (historyTab && prevTabRef.current && prevTabRef.current !== historyTab) {
+    const prevIdx = TAB_ORDER.indexOf(prevTabRef.current);
+    const nextIdx = TAB_ORDER.indexOf(historyTab);
+    slideDirection = nextIdx > prevIdx ? "right" : "left";
+  }
+
+  useEffect(() => {
+    if (historyTab) lastTabRef.current = historyTab;
+    prevTabRef.current = historyTab;
+  }, [historyTab]);
+
+  useEffect(() => {
+    if (!historyTab) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        handleCloseHistory();
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [historyTab, handleCloseHistory]);
 
   async function handleGenerate(request: GenerationRequest) {
     setError(null);
@@ -248,6 +317,7 @@ export default function Home() {
       ratio: entry.ratio,
       model: entry.model,
     });
+    setHistoryTab(null);
     if (typeof document !== "undefined") {
       const textarea = document.getElementById("forge-prompt");
       if (textarea instanceof HTMLTextAreaElement) textarea.focus();
@@ -256,9 +326,29 @@ export default function Home() {
 
   return (
     <div className={styles.shell}>
-      <Header />
+      <Header
+        activeTab={historyTab}
+        onSelectTab={handleSelectTab}
+        panelId={HISTORY_PANEL_ID}
+        navButtonRef={navButtonRef}
+      />
       <div className={styles.body}>
-        <HistoryStrip onPick={handlePickHistory} />
+        <div
+          className={styles.historySlot}
+          data-open={historyTab ? "true" : "false"}
+          aria-hidden={historyTab ? "false" : "true"}
+        >
+          <HistoryStrip
+            asDropdown
+            open={historyTab !== null}
+            id={HISTORY_PANEL_ID}
+            filter={historyTab ? TAB_MAP[historyTab].filter : null}
+            label={historyTab ? TAB_MAP[historyTab].label : "History"}
+            contentKey={historyTab ?? "closed"}
+            direction={slideDirection}
+            onPick={handlePickHistory}
+          />
+        </div>
         <div className={styles.workspace}>
           <aside className={styles.sidebar}>
             <PromptPanel

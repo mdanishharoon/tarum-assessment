@@ -8,6 +8,8 @@ import {
   subscribeToHistory,
   type HistoryEntry,
 } from "@/lib/history-store";
+import type { GenerationMode } from "@/lib/types";
+import { cn } from "@/lib/cn";
 import styles from "./HistoryStrip.module.css";
 
 type DisplayItem = {
@@ -17,8 +19,19 @@ type DisplayItem = {
   entry?: HistoryEntry;
 };
 
+type SlideDirection = "enter" | "left" | "right";
+
 type HistoryStripProps = {
   onPick?: (entry: HistoryEntry) => void;
+  filter?: GenerationMode | null;
+  label?: string;
+  asDropdown?: boolean;
+  open?: boolean;
+  id?: string;
+  /** Stable key for the active mode — drives the slide animation. */
+  contentKey?: string;
+  /** Direction to slide the content in from when contentKey changes. */
+  direction?: SlideDirection;
 };
 
 function toDisplay(entry: HistoryEntry): DisplayItem {
@@ -30,19 +43,20 @@ function toDisplay(entry: HistoryEntry): DisplayItem {
   };
 }
 
-export function HistoryStrip({ onPick }: HistoryStripProps) {
+export function HistoryStrip({
+  onPick,
+  filter = null,
+  label = "History",
+  asDropdown = false,
+  open = false,
+  id,
+  contentKey = "default",
+  direction = "enter",
+}: HistoryStripProps) {
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [fadeLeft, setFadeLeft] = useState(false);
   const [fadeRight, setFadeRight] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef({
-    pointerId: -1,
-    startX: 0,
-    startScroll: 0,
-    moved: false,
-  });
-  const suppressClickRef = useRef(false);
 
   useEffect(() => {
     setEntries(loadHistory());
@@ -51,7 +65,10 @@ export function HistoryStrip({ onPick }: HistoryStripProps) {
   }, []);
 
   const items: DisplayItem[] = useMemo(() => {
-    const stored = entries.map(toDisplay);
+    const filtered = filter
+      ? entries.filter((entry) => entry.mode === filter)
+      : entries;
+    const stored = filtered.map(toDisplay);
     const fillCount = Math.max(0, 15 - stored.length);
     const fill = seedItems.slice(0, fillCount).map((item) => ({
       id: item.id,
@@ -59,7 +76,7 @@ export function HistoryStrip({ onPick }: HistoryStripProps) {
       alt: item.alt,
     }));
     return [...stored, ...fill];
-  }, [entries]);
+  }, [entries, filter]);
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -88,118 +105,74 @@ export function HistoryStrip({ onPick }: HistoryStripProps) {
     };
   }, [items.length]);
 
-  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (event.pointerType !== "mouse" || event.button !== 0) return;
-    const el = scrollerRef.current;
-    if (!el) return;
-    dragRef.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startScroll: el.scrollLeft,
-      moved: false,
-    };
-    el.setPointerCapture(event.pointerId);
-    setIsDragging(true);
-  }
-
-  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (
-      event.pointerType !== "mouse" ||
-      event.pointerId !== dragRef.current.pointerId
-    ) {
-      return;
-    }
-    const el = scrollerRef.current;
-    if (!el) return;
-    const dx = event.clientX - dragRef.current.startX;
-    if (!dragRef.current.moved && Math.abs(dx) > 4) {
-      dragRef.current.moved = true;
-    }
-    el.scrollLeft = dragRef.current.startScroll - dx;
-  }
-
-  function endDrag(event: React.PointerEvent<HTMLDivElement>) {
-    if (
-      event.pointerType !== "mouse" ||
-      event.pointerId !== dragRef.current.pointerId
-    ) {
-      return;
-    }
-    const el = scrollerRef.current;
-    if (el && el.hasPointerCapture(event.pointerId)) {
-      el.releasePointerCapture(event.pointerId);
-    }
-    if (dragRef.current.moved) {
-      suppressClickRef.current = true;
-      window.setTimeout(() => {
-        suppressClickRef.current = false;
-      }, 80);
-    }
-    dragRef.current.pointerId = -1;
-    setIsDragging(false);
-  }
-
   return (
-    <section aria-label="Generation history" className={styles.container}>
-      <div className={styles.label}>
-        <span className={styles.labelTitle}>History</span>
-        <button
-          type="button"
-          className={styles.labelLink}
-          aria-disabled="true"
-          title="A full gallery view isn't part of this prototype"
-        >
-          View All
-        </button>
-      </div>
+    <section
+      id={id}
+      aria-label="Generation history"
+      className={cn(styles.container, asDropdown && styles.dropdown)}
+      data-open={asDropdown ? (open ? "true" : "false") : undefined}
+      role={asDropdown ? "region" : undefined}
+    >
       <div
-        className={styles.scrollWrap}
-        data-fade-left={fadeLeft ? "true" : "false"}
-        data-fade-right={fadeRight ? "true" : "false"}
+        key={contentKey}
+        className={styles.content}
+        data-direction={direction}
       >
+        <div className={styles.label}>
+          <span className={styles.labelTitle}>{label}</span>
+          <button
+            type="button"
+            className={styles.labelLink}
+            aria-disabled="true"
+            title="A full gallery view isn't part of this prototype"
+          >
+            View All
+          </button>
+        </div>
         <div
-          ref={scrollerRef}
-          className={styles.scroller}
-          data-dragging={isDragging ? "true" : "false"}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
+          className={styles.scrollWrap}
+          data-fade-left={fadeLeft ? "true" : "false"}
+          data-fade-right={fadeRight ? "true" : "false"}
         >
-        <ul className={styles.list}>
-          {items.map((item) => {
-            const interactive = Boolean(item.entry && onPick);
-            const handleClick = () => {
-              if (suppressClickRef.current) return;
-              if (item.entry && onPick) onPick(item.entry);
-            };
-            return (
-              <li key={item.id} className={styles.item}>
-                <button
-                  type="button"
-                  className={styles.thumb}
-                  aria-label={
-                    item.entry
-                      ? `Reuse prompt: ${item.alt}`
-                      : `${item.alt} (sample)`
-                  }
-                  onClick={handleClick}
-                  disabled={!interactive}
-                  data-interactive={interactive ? "true" : "false"}
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    width={240}
-                    height={240}
-                    className={styles.thumbImage}
-                    sizes="(max-width: 640px) 96px, 120px"
-                  />
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+          <div ref={scrollerRef} className={styles.scroller}>
+            <ul className={styles.list}>
+              {items.map((item, index) => {
+                const interactive = Boolean(item.entry && onPick);
+                const handleClick = () => {
+                  if (item.entry && onPick) onPick(item.entry);
+                };
+                return (
+                  <li
+                    key={item.id}
+                    className={styles.item}
+                    style={{ "--item-index": index } as React.CSSProperties}
+                  >
+                    <button
+                      type="button"
+                      className={styles.thumb}
+                      aria-label={
+                        item.entry
+                          ? `Reuse prompt: ${item.alt}`
+                          : `${item.alt} (sample)`
+                      }
+                      onClick={handleClick}
+                      disabled={!interactive}
+                      data-interactive={interactive ? "true" : "false"}
+                    >
+                      <Image
+                        src={item.src}
+                        alt={item.alt}
+                        width={240}
+                        height={240}
+                        className={styles.thumbImage}
+                        sizes="(max-width: 640px) 96px, 120px"
+                      />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </div>
     </section>

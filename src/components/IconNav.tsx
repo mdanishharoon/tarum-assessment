@@ -1,34 +1,42 @@
 "use client";
 
-import { useState } from "react";
 import { cn } from "@/lib/cn";
 import {
-  FolderIcon,
-  HomeIcon,
-  ImageIcon,
-  VideoIcon,
-  WandIcon,
+  FolderIconSolid,
+  HomeIconSolid,
+  ImageIconSolid,
+  VideoIconSolid,
+  WandIconSolid,
 } from "./Icons";
 import styles from "./IconNav.module.css";
 
-const items = [
-  { id: "home", label: "Home", Icon: HomeIcon },
-  { id: "images", label: "Images", Icon: ImageIcon },
-  { id: "videos", label: "Videos", Icon: VideoIcon },
-  { id: "enhance", label: "Enhance", Icon: WandIcon },
-  { id: "library", label: "Library", Icon: FolderIcon },
-] as const;
+export type HistoryTab = "home" | "image" | "video" | "enhance" | "library";
 
-export function IconNav() {
-  const [active, setActive] = useState<(typeof items)[number]["id"]>("home");
-  const activeIndex = items.findIndex((item) => item.id === active);
-  const progress = items.length > 1 ? activeIndex / (items.length - 1) : 0;
+const items: ReadonlyArray<{ id: HistoryTab; label: string; Icon: typeof HomeIconSolid }> = [
+  { id: "home", label: "All history", Icon: HomeIconSolid },
+  { id: "image", label: "Image history", Icon: ImageIconSolid },
+  { id: "video", label: "Video history", Icon: VideoIconSolid },
+  { id: "enhance", label: "Enhance", Icon: WandIconSolid },
+  { id: "library", label: "Library", Icon: FolderIconSolid },
+];
+
+type IconNavProps = {
+  active: HistoryTab | null;
+  onSelect: (tab: HistoryTab) => void;
+  panelId?: string;
+  buttonRef?: React.RefObject<Record<HistoryTab, HTMLButtonElement | null>>;
+};
+
+export function IconNav({ active, onSelect, panelId = "history-panel", buttonRef }: IconNavProps) {
+  const activeIndex = active ? items.findIndex((item) => item.id === active) : -1;
+  const progress = activeIndex >= 0 && items.length > 1 ? activeIndex / (items.length - 1) : 0;
 
   return (
-    <nav aria-label="Workspace sections" className={styles.wrapper}>
+    <nav aria-label="History tabs" className={styles.wrapper}>
       <div className={styles.progressTrack} aria-hidden="true">
         <span
           className={styles.progressFill}
+          data-visible={active ? "true" : "false"}
           style={{ "--progress": progress } as React.CSSProperties}
         />
       </div>
@@ -38,10 +46,15 @@ export function IconNav() {
           return (
             <li key={id}>
               <button
+                ref={(el) => {
+                  if (buttonRef?.current) buttonRef.current[id] = el;
+                }}
                 type="button"
-                aria-current={isActive ? "page" : undefined}
+                aria-haspopup="dialog"
+                aria-expanded={isActive}
+                aria-controls={panelId}
                 aria-label={label}
-                onClick={() => setActive(id)}
+                onClick={() => onSelect(id)}
                 className={cn(styles.item, isActive && styles.itemActive)}
               >
                 <Icon className={styles.icon} />

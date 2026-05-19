@@ -29,7 +29,18 @@
   left: calc(3px + var(--progress) * 80%);
   border-radius: 999px;
   background: var(--accent);
-  transition: left 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: center;
+  transition:
+    left 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.progressFill[data-visible="true"] {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .list {
