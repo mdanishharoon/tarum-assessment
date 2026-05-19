@@ -276,14 +276,34 @@
 }
 
 @media (max-width: 640px) {
+  .container {
+    padding: 0.55rem;
+    border-radius: 1.15rem;
+  }
+  .content {
+    gap: 0.55rem;
+  }
   .label {
-    padding: 0.75rem 1rem;
-    min-width: 5.5rem;
+    padding: 0.65rem 0.9rem;
+    min-width: auto;
+    border-radius: 0.85rem;
   }
   .labelTitle {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   .labelLink {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
+  }
+  .thumb {
+    width: clamp(3.5rem, 18vw, 4.75rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .labelLink {
+    display: none;
+  }
+  .label {
+    padding: 0.55rem 0.75rem;
   }
 }

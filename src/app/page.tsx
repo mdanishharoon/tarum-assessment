@@ -10,6 +10,7 @@ import {
   type PromptPanelHandle,
 } from "@/components/PromptPanel";
 import { ResultsCanvas, type CanvasCell } from "@/components/ResultsCanvas";
+import { ScrollToPromptButton } from "@/components/ScrollToPromptButton";
 import { MODELS } from "@/lib/ratios";
 import { pushHistory, type HistoryEntry } from "@/lib/history-store";
 import type {
@@ -111,16 +112,8 @@ export default function Home() {
     scrollTargetRef.current = null;
     requestAnimationFrame(() => {
       const el = document.getElementById(`generation-${target}`);
-      const container = resultsRef.current;
       if (!el) return;
-      if (container && container.scrollHeight > container.clientHeight) {
-        const containerRect = container.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
-        const top = elRect.top - containerRect.top + container.scrollTop - 12;
-        container.scrollTo({ top, behavior: "smooth" });
-      } else {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }, [canvases.length]);
 
@@ -389,6 +382,7 @@ export default function Home() {
           </section>
         </div>
       </div>
+      <ScrollToPromptButton />
     </div>
   );
 }

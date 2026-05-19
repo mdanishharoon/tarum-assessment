@@ -19,24 +19,20 @@
   max-height: 0;
   opacity: 0;
   margin-bottom: 0;
-  transform: translateY(-10px);
   transition:
-    max-height 220ms cubic-bezier(0.4, 0, 1, 1),
-    opacity 160ms cubic-bezier(0.4, 0, 1, 1),
-    margin-bottom 220ms cubic-bezier(0.4, 0, 1, 1),
-    transform 220ms cubic-bezier(0.4, 0, 1, 1);
+    max-height 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-bottom 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .historySlot[data-open="true"] {
-  max-height: 330px;
+  max-height: 200px;
   opacity: 1;
   margin-bottom: 1.2rem;
-  transform: translateY(0);
   transition:
-    max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1) 40ms,
-    margin-bottom 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
+    max-height 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms cubic-bezier(0.22, 1, 0.36, 1) 60ms,
+    margin-bottom 340ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -46,7 +42,6 @@
       max-height 200ms ease,
       opacity 160ms ease,
       margin-bottom 200ms ease;
-    transform: none;
   }
 }
 
@@ -119,6 +114,7 @@
   }
   .workspace {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
   .results {
     overflow-y: visible;
@@ -127,5 +123,19 @@
     border: none;
     border-radius: 0;
     scrollbar-gutter: auto;
+    gap: 1.5rem;
+  }
+  .historySlot[data-open="true"] {
+    max-height: 175px;
+    margin-bottom: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .historySlot[data-open="true"] {
+    max-height: 160px;
+  }
+  .results {
+    gap: 1.25rem;
   }
 }

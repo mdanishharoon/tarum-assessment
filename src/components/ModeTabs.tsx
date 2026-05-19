@@ -21,7 +21,9 @@ export function ModeTabs({ value, onChange }: ModeTabsProps) {
       <span
         className={styles.indicator}
         aria-hidden="true"
-        style={{ transform: `translateX(${activeIndex * 100}%)` }}
+        style={{
+          transform: `translateX(calc(${activeIndex * 100}% + ${activeIndex * 0.64}rem))`,
+        }}
       />
       {modes.map((mode) => (
         <button

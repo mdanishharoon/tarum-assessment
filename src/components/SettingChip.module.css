@@ -1,14 +1,16 @@
 .wrap {
   position: relative;
-  display: inline-flex;
+  display: flex;
+  min-width: 0;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.6rem 0.4rem 0.55rem;
-  border-radius: 999px;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.45rem 0.7rem 0.45rem 0.65rem;
+  border-radius: 0.6rem;
   background: var(--bg-elevated);
   border: 1px solid var(--stroke-soft);
   font-size: 0.78rem;
@@ -55,12 +57,17 @@
 .value {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .chevron {
   width: 0.85rem;
   height: 0.85rem;
   color: var(--fg-muted);
+  margin-left: auto;
+  flex-shrink: 0;
   transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -83,11 +90,24 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  transform-origin: top left;
   box-shadow:
     inset 1px 1px 0 var(--slab-highlight),
     2px 4px 18px oklch(0% 0 0 / 0.08);
   animation: popIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  transform-origin: top left;
+}
+
+.popover[data-align="end"] {
+  left: auto;
+  right: 0;
+  transform-origin: top right;
+}
+
+@media (max-width: 480px) {
+  .popover {
+    min-width: max(100%, 14rem);
+    max-width: calc(100vw - 2rem);
+  }
 }
 
 @keyframes popIn {
