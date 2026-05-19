@@ -93,15 +93,20 @@ function CellPercent({ startedAt, delay }: { startedAt: number; delay: number })
   const curveRef = useRef<ProgressPoint[] | null>(null);
   if (curveRef.current === null) curveRef.current = buildProgressCurve(delay);
 
-  const [now, setNow] = useState(() => Date.now());
+  const [percent, setPercent] = useState(() =>
+    Math.floor(valueAt(curveRef.current!, Date.now() - startedAt)),
+  );
 
   useEffect(() => {
-    const interval = setInterval(() => setNow(Date.now()), 120);
+    const interval = setInterval(() => {
+      const next = Math.floor(
+        valueAt(curveRef.current!, Date.now() - startedAt),
+      );
+      setPercent((prev) => (prev === next ? prev : next));
+    }, 120);
     return () => clearInterval(interval);
-  }, []);
+  }, [startedAt]);
 
-  const elapsed = now - startedAt;
-  const percent = Math.floor(valueAt(curveRef.current, elapsed));
   return (
     <span className={styles.cellPercent} aria-label={`Loading ${percent}%`}>
       {percent}%
