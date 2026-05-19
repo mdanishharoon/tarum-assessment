@@ -33,14 +33,6 @@ export const metadata: Metadata = {
     description: "Generate images and videos from text prompts.",
     url: "/",
     siteName: "Forge",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Forge — AI Content Studio",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
@@ -48,11 +40,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Forge — AI Content Studio",
     description: "Generate images and videos from text prompts.",
-    images: ["/og-image.png"],
-  },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
   },
 };
 
