@@ -26,6 +26,22 @@ The strip drops in below the header, not as an overlay on the canvas, because th
 - **Thumb stagger.** Cells inside the strip and inside the results canvas both animate in with `cellEnter`-style stagger keyed off `--cell-index`. Capped at ~8–12 to keep the tail snappy.
 - **Reduced-motion** trims everything to opacity-only.
 
+## Microinteractions
+
+The small moments that make the UI feel alive without getting in the way.
+
+- **Generate button sparkles.** The sparkle icon next to "Generate" stays still by default; on hover or focus the `motion/react`-powered icon plays a short shimmer. Drives anticipation toward the primary action without animating constantly.
+- **Generate press feedback.** `translateY(-1px)` on hover and `+2px` on active mouse-down, with the coral glow dimming on press. The button physically responds to the click.
+- **IconNav progress bar.** When a tab is opened, the coral track underneath fades in and scales from 0.4 → 1 (220ms opacity, 360ms scale) on top of the 480ms horizontal slide. When all tabs are closed the bar collapses back out. The motion reads as the bar "growing into place," not just sliding.
+- **Mode-tab indicator.** The active pill inside Image/Video slides between halves in 320ms ease-out, with the inner inset compensated by a calc in the transform so the pill keeps equal breathing room on both sides regardless of which half it sits in.
+- **History thumbnail lift.** Hovering an interactive thumb in the strip triggers `translateY(-2px) scale(1.02)` over 220ms; the scroller has a 4px top padding specifically so the lift never gets clipped by the dropdown's overflow.
+- **Skeleton cells.** Each loading tile has two semi-transparent blobs drifting on independent randomized timings (`blobDriftA` / `blobDriftB`) plus a 115° sheen sweep, so a grid of four placeholders never looks like four copies of the same animation. The blob seed is hashed from the placeholder id.
+- **Cell complete handoff.** When a cell resolves, the blurred skeleton fades + blurs out (820ms) while the actual image fades + un-scales in (1100ms). The two layers cross-fade rather than swap.
+- **PromptCard completion pulse.** When all cells in a generation finish, the surrounding prompt card runs a 800ms coral ring expand-and-fade (`completionPulse`), then settles back to its resting border. Subtle, but it's the only "done" cue if you weren't looking at the cells.
+- **SettingChip popover pop-in.** 220ms `translateY(-6px) → 0` + scale `0.985 → 1` on open, with `transform-origin: top left` (or `top right` when auto-flipped). The chevron rotates 180° in the same window.
+- **Scroll-to-prompt button.** Appears below 960px only when the user has scrolled more than 240px down. Fades and translates up 8px into place (220ms / 260ms), so it doesn't pop in abruptly.
+- **Live progress counter.** `CellPercent` ticks every 120ms but only commits a re-render when the rounded integer changes — perceived as a smooth count without the cost of a real timer-driven re-render storm.
+
 ## Information architecture in the prompt panel
 
 - **Settings as chips.** Count, ratio, and model collapsed from full segmented controls into small chips with popovers, freeing room for the textarea.
