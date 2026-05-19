@@ -1,20 +1,19 @@
 .group {
-  display: flex;
-  gap: 0.2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(3.85rem, 1fr));
+  gap: 0.22rem;
   width: 100%;
 }
 
 .item {
-  flex: 1 1 0;
-  min-width: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.35rem;
-  font-size: 0.78rem;
+  gap: 0.3rem;
+  padding: 0.32rem 0.45rem;
+  font-size: 0.76rem;
   font-weight: 500;
-  border-radius: 0.5rem;
+  border-radius: 0.45rem;
   background: transparent;
   border: 1px solid transparent;
   color: var(--fg-muted);
@@ -36,7 +35,7 @@
   border-color: var(--stroke-soft);
   color: var(--fg-default);
   box-shadow:
-    inset 1px 1px 0 oklch(100% 0 0 / 0.45),
+    inset 1px 1px 0 var(--slab-highlight),
     1px 1px 0 oklch(0% 0 0 / 0.04);
 }
 
@@ -59,7 +58,4 @@
 .label {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
 }

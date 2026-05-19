@@ -5,15 +5,15 @@
     var(--font-sans), "Google Sans Flex", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  --color-cream: oklch(99% 0.003 70);
-  --color-cream-deep: oklch(94% 0.018 65);
-  --color-surface: oklch(93% 0.025 55);
-  --color-surface-soft: oklch(95.5% 0.018 60);
-  --color-surface-strong: oklch(89% 0.035 50);
+  --color-cream: oklch(99% 0.0025 70);
+  --color-cream-deep: oklch(94% 0.014 65);
+  --color-surface: oklch(93% 0.02 55);
+  --color-surface-soft: oklch(95.5% 0.014 60);
+  --color-surface-strong: oklch(89% 0.028 50);
 
-  --color-coral: oklch(72% 0.13 35);
-  --color-coral-soft: oklch(82% 0.075 40);
-  --color-coral-deep: oklch(64% 0.15 32);
+  --color-coral: oklch(72% 0.11 35);
+  --color-coral-soft: oklch(82% 0.062 40);
+  --color-coral-deep: oklch(64% 0.125 32);
 
   --color-ink: oklch(22% 0.012 65);
   --color-ink-soft: oklch(38% 0.012 65);
@@ -50,33 +50,42 @@
   --bg-error: oklch(94% 0.05 30);
   --fg-error: oklch(35% 0.12 30);
   --stroke-error: oklch(85% 0.08 30);
+  --slab-edge: oklch(0% 0 0 / 0.12);
+  --slab-highlight: oklch(100% 0 0 / 0.3);
+  --bg-inset: oklch(91.5% 0.02 55);
+  --inset-shadow: oklch(0% 0 0 / 0.05);
 }
 
 .dark {
   color-scheme: dark;
-  --bg-page: oklch(18% 0.012 65);
-  --bg-elevated: oklch(22% 0.014 65);
-  --bg-surface: oklch(25% 0.018 55);
-  --bg-surface-soft: oklch(22% 0.014 60);
-  --bg-surface-strong: oklch(30% 0.025 50);
-  --fg-default: oklch(95% 0.012 70);
-  --fg-soft: oklch(82% 0.012 65);
-  --fg-muted: oklch(65% 0.012 65);
-  --fg-faint: oklch(48% 0.012 65);
-  --accent: oklch(74% 0.14 35);
-  --accent-soft: oklch(45% 0.08 35);
-  --accent-deep: oklch(80% 0.16 32);
+  --bg-page: oklch(18% 0.01 65);
+  --bg-elevated: oklch(22% 0.012 65);
+  --bg-surface: oklch(25% 0.014 55);
+  --bg-surface-soft: oklch(22% 0.012 60);
+  --bg-surface-strong: oklch(30% 0.02 50);
+  --fg-default: oklch(95% 0.01 70);
+  --fg-soft: oklch(82% 0.01 65);
+  --fg-muted: oklch(65% 0.01 65);
+  --fg-faint: oklch(48% 0.01 65);
+  --accent: oklch(74% 0.115 35);
+  --accent-soft: oklch(45% 0.065 35);
+  --accent-deep: oklch(80% 0.13 32);
   --stroke: oklch(32% 0.015 60);
   --stroke-soft: oklch(28% 0.012 60);
   --bg-error: oklch(30% 0.06 30);
   --fg-error: oklch(88% 0.08 30);
   --stroke-error: oklch(40% 0.1 30);
+  --slab-edge: oklch(0% 0 0 / 0.4);
+  --slab-highlight: oklch(100% 0 0 / 0.06);
+  --bg-inset: oklch(15.5% 0.01 65);
+  --inset-shadow: oklch(0% 0 0 / 0.22);
 }
 
 html,
 body {
   background: var(--bg-page);
   color: var(--fg-default);
+  overscroll-behavior-y: none;
 }
 
 body {
