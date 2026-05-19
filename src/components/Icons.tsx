@@ -13,15 +13,6 @@ const base = {
   "aria-hidden": true,
 };
 
-export function HomeIcon(props: IconProps) {
-  return (
-    <svg {...base} {...props}>
-      <path d="M3 11.5 12 4l9 7.5" />
-      <path d="M5 10v9.5a.5.5 0 0 0 .5.5h4V14h5v6h4a.5.5 0 0 0 .5-.5V10" />
-    </svg>
-  );
-}
-
 export function ImageIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
@@ -37,23 +28,6 @@ export function VideoIcon(props: IconProps) {
     <svg {...base} {...props}>
       <rect x="3" y="6" width="13" height="12" rx="2.5" />
       <path d="m16 10 5-3v10l-5-3z" />
-    </svg>
-  );
-}
-
-export function WandIcon(props: IconProps) {
-  return (
-    <svg {...base} {...props}>
-      <path d="m14 6 4 4-9 9-4 1 1-4z" />
-      <path d="M19 3v3M22 4.5h-3M17 9v2M18 10h-2" />
-    </svg>
-  );
-}
-
-export function FolderIcon(props: IconProps) {
-  return (
-    <svg {...base} {...props}>
-      <path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H10l2 2.5h7.5A1.5 1.5 0 0 1 21 9v8.5A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z" />
     </svg>
   );
 }
