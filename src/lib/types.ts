@@ -1,6 +1,6 @@
 export type GenerationMode = "image" | "video";
 
-export type AspectRatio = "1:1" | "4:3" | "3:4" | "16:9" | "9:16";
+export type AspectRatio = "1:1" | "4:3" | "3:4" | "16:9";
 
 export type GenerationItem = {
   id: string;

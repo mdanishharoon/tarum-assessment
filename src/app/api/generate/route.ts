@@ -57,7 +57,7 @@ function clampCount(value: unknown, fallback: number): number {
 }
 
 function asRatio(value: unknown): AspectRatio {
-  const allowed: AspectRatio[] = ["1:1", "4:3", "3:4", "16:9", "9:16"];
+  const allowed: AspectRatio[] = ["1:1", "4:3", "3:4", "16:9"];
   return allowed.includes(value as AspectRatio) ? (value as AspectRatio) : "1:1";
 }
 

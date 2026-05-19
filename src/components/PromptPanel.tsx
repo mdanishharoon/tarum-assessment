@@ -167,10 +167,9 @@ export const PromptPanel = forwardRef<PromptPanelHandle, PromptPanelProps>(
           />
         </div>
 
-        <Accordion title="Advance">
+        <Accordion title="Advance" disabled disabledHint="Not part of this prototype">
           <p className={styles.helper}>
-            Fine-tune sampling steps, CFG scale and seed. (Mock controls, the dummy API ignores
-            these.)
+            Fine-tune sampling steps, CFG scale and seed.
           </p>
           <div className={styles.advanceGrid}>
             <label className={styles.field}>
@@ -188,7 +187,7 @@ export const PromptPanel = forwardRef<PromptPanelHandle, PromptPanelProps>(
           </div>
         </Accordion>
 
-        <Accordion title="Styles">
+        <Accordion title="Styles" disabled disabledHint="Not part of this prototype">
           <div className={styles.styles}>
             {STYLE_PRESETS.map((preset) => (
               <button
