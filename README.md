@@ -1,17 +1,31 @@
-# tarum-assessment
+# Forge
 
-Responsive AI content generation web page — frontend technical assessment.
+Responsive AI content-generation prototype, built as a frontend technical assessment.
 
-## Tech Stack
+A single-page app that simulates image + video generation: type a prompt, pick a count / aspect ratio / model, hit Generate, and watch four (or however many) skeleton cells resolve into media. Past generations live in a per-mode history dropdown that opens from the top icon navbar.
 
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4 + CSS Modules
-- **Hosting**: Vercel
-- **CI**: GitHub Actions (lint, type-check, build)
-- **Dev Environment**: Nix (optional) + Bun
+## Stack
 
-## Getting Started
+- **Next.js 15** (App Router) + **React 19** + **TypeScript**
+- **Tailwind CSS v4** + **CSS Modules**
+- **Bun** for install / dev / build, **Turbopack** for `next dev`
+- **Motion** (Framer Motion's successor) for the animated sparkles icon
+- Deployed on **Vercel**
+
+The dummy API lives at `src/app/api/generate/route.ts` and returns `image` or `video` items with a synthetic per-item delay so the UI can animate skeletons → loaded media progressively.
+
+## Features
+
+- Per-mode history dropdown from the top nav (Home / Image / Video / Enhance / Library) with direction-aware slide animations between modes
+- Prompt panel: Count, Ratio, and Model as chips with popovers; Advance + Styles accordions as disabled placeholders
+- Stacked canvases that scroll smoothly into view on every Generate
+- Light + dark mode using a small set of theme-aware OKLCH tokens
+- Live progress counters per cell that re-render only when the rounded percent changes
+- Responsive from 320px → 1920px+, with the workspace stacking below 960px and a fixed scroll-to-top button appearing once the user has scrolled past the prompt box
+
+See [`docs/design-decisions.md`](docs/design-decisions.md) and [`docs/technical-decisions.md`](docs/technical-decisions.md) for the longer-form rationale.
+
+## Getting started
 
 ### With Nix (recommended)
 
@@ -35,9 +49,9 @@ bun run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Environment Variables
+## Environment variables
 
-Copy `.env.example` to `.env.local` and fill in the values:
+Copy `.env.example` to `.env.local` and fill in:
 
 | Variable | Description |
 |----------|-------------|
@@ -54,20 +68,37 @@ Copy `.env.example` to `.env.local` and fill in the values:
 | `bun run format` | Format with treefmt (prettier + nixfmt) |
 | `bun run type-check` | TypeScript type checking |
 
-## Deployment
-
-Deployed on [Vercel](https://vercel.com). Connect the GitHub repo via the Vercel dashboard — production deploys run on push to `main`, and every PR gets a preview URL automatically. No workflow file is required for deploys.
-
-## Project Structure
+## Project structure
 
 ```
 src/
-  app/          # Next.js App Router pages, layouts, API routes
-  components/   # Reusable UI components
-  lib/          # Utility functions and shared logic
-public/         # Static assets
-flake.nix       # Nix dev environment
-treefmt.nix     # treefmt config (nix-native)
-treefmt.toml    # treefmt config (non-nix fallback)
-lefthook.yml    # Git hooks (lint, format, type-check on commit)
+  app/
+    api/generate/route.ts    # dummy API: returns image/video items with synthetic delays
+    page.tsx                 # owns canvases, history tab state, generation flow
+    layout.tsx               # root layout
+    globals.css              # OKLCH tokens, slab + inset surface vocabulary
+  components/                # PromptPanel, HistoryStrip, ResultsCanvas, etc.
+  lib/
+    history-store.ts         # localStorage-backed history with subscriber pattern
+    history.ts               # seed thumbnails for first-run fill
+    ratios.ts                # MODELS, ASPECT_RATIOS, IMAGE_COUNTS
+    types.ts                 # GenerationMode / AspectRatio / GenerationItem
+docs/
+  design-decisions.md
+  technical-decisions.md
+  screenshots/               # phone / tablet / desktop reference shots
 ```
+
+## Responsiveness
+
+| Range | Layout |
+|-------|--------|
+| ≥1025px | Three-column header. Sidebar (PromptPanel) + canvas side-by-side. |
+| 541–1024px (tablet) | Single-row header with IconNav absolutely centered; Gallery / Support pills contract to icon-only. Sidebar stacks above the canvas below 960px. |
+| ≤540px (small phone) | Header drops to two rows (Logo + actions on top, IconNav below). PromptPanel tightens; history strip caps at 160–175px and drops "View All". |
+
+Reference screenshots for each breakpoint live in [`docs/screenshots/`](docs/screenshots/).
+
+## Deployment
+
+Deployed on [Vercel](https://vercel.com). Connect the GitHub repo via the Vercel dashboard. Production deploys on push to `main`; every PR gets a preview URL. No workflow file required.
