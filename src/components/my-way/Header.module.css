@@ -13,6 +13,73 @@
   background: var(--mw-midnight);
 }
 
+/* Mobile-only chrome — invisible on desktop. */
+.menuButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1.5px solid var(--mw-ghost-12);
+  border-radius: 12px;
+  color: var(--mw-ghost-80);
+  cursor: pointer;
+  padding: 0;
+  transition:
+    border-color 160ms var(--mw-ease-quint),
+    background-color 160ms var(--mw-ease-quint),
+    color 160ms var(--mw-ease-quint),
+    transform 140ms var(--mw-ease-quint);
+}
+
+.menuButton:hover {
+  border-color: var(--mw-ghost-22);
+  background: var(--mw-ghost-04);
+  color: var(--mw-ghost);
+}
+
+.menuButton:active {
+  transform: scale(0.96);
+}
+
+.menuButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.brand {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  color: var(--mw-ghost);
+  justify-self: center;
+}
+
+.brandMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: inherit;
+  translate: 0 -1px;
+}
+
+.brandMark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brandTag {
+  font-family: var(--mw-font-display);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
 .commander {
   grid-column: 2;
   display: inline-flex;
@@ -246,5 +313,42 @@
   }
   .iconButton {
     display: none;
+  }
+}
+
+/* Phone: swap to hamburger + brand + avatar. */
+@media (max-width: 640px) {
+  .header {
+    grid-template-columns: auto 1fr auto;
+    gap: var(--mw-space-9);
+    padding: 0 var(--mw-space-14);
+    padding-top: env(safe-area-inset-top);
+    height: calc(56px + env(safe-area-inset-top));
+    min-height: calc(56px + env(safe-area-inset-top));
+    border-bottom: 1.5px solid var(--mw-ghost-08);
+  }
+  .menuButton {
+    display: inline-flex;
+    grid-column: 1;
+  }
+  .brand {
+    display: inline-flex;
+    grid-column: 2;
+  }
+  .commander,
+  .upgrade {
+    display: none;
+  }
+  .actions {
+    grid-column: 3;
+    gap: var(--mw-space-7);
+  }
+  .iconButton {
+    display: none;
+  }
+  .avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
   }
 }

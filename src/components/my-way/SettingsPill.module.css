@@ -230,6 +230,25 @@
   }
 }
 
+@media (max-width: 640px) {
+  /* Lift popover into fixed viewport coords so it can't clip against the right edge of a wrapping toolbar row.
+     Anchor near the bottom so it visually rises out of the prompt bar instead of floating mid-screen. */
+  .popover,
+  .popover[data-align="end"] {
+    position: fixed;
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom) + 240px);
+    left: 50%;
+    right: auto;
+    width: calc(100vw - 28px);
+    max-width: 360px;
+    max-height: calc(100dvh - env(safe-area-inset-bottom) - 280px);
+    overflow-y: auto;
+    transform-origin: bottom center;
+    translate: -50% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .popover {
     animation: none;

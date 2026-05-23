@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bebas_Neue } from "next/font/google";
 import "./tokens.css";
 import "./my-way.css";
@@ -13,6 +13,13 @@ const bebas = Bebas_Neue({
 export const metadata: Metadata = {
   title: "Forge — AI Content Studio",
   description: "A dense, opinionated AI image and video studio. Generate, edit, animate, fork.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#141414",
 };
 
 export default function MyWayLayout({ children }: { children: React.ReactNode }) {

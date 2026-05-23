@@ -96,16 +96,16 @@
     bottom: 8px;
   }
   .button {
-    padding: 0 10px;
-    height: 28px;
+    padding: 0 12px;
+    height: 36px;
     font-size: 11px;
   }
   .button .label {
     display: none;
   }
   .button svg {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
   }
 }
 

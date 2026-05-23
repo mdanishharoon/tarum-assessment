@@ -65,6 +65,7 @@ export default function MyWayPage() {
   const [focused, setFocused] = useState<FocusedImage>(null);
   const [activeTool, setActiveTool] = useState<SidebarTool>("image");
   const [commanderOpen, setCommanderOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
     setTurns(loadTurns());
@@ -270,10 +271,18 @@ export default function MyWayPage() {
         <span className={`${styles.decorationBlob} ${styles.decorationBlobB}`} />
       </div>
 
-      <Sidebar activeTool={activeTool} onSelectTool={setActiveTool} />
+      <Sidebar
+        activeTool={activeTool}
+        onSelectTool={setActiveTool}
+        mobileOpen={navOpen}
+        onMobileClose={() => setNavOpen(false)}
+      />
 
       <div className={styles.main}>
-        <Header onOpenCommander={() => setCommanderOpen(true)} />
+        <Header
+          onOpenCommander={() => setCommanderOpen(true)}
+          onOpenNav={() => setNavOpen(true)}
+        />
         <main className={styles.body}>
           <Canvas
             turns={turns}

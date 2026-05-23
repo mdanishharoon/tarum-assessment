@@ -409,3 +409,63 @@
     padding: 0 14px;
   }
 }
+
+/* Phone: stack toolbar — controls scroll horizontally, Generate gets its own full-width row. */
+@media (max-width: 640px) {
+  .dock {
+    padding: var(--mw-space-6) var(--mw-space-14)
+      calc(var(--mw-space-14) + env(safe-area-inset-bottom));
+  }
+  .bar {
+    gap: 10px;
+    padding: 12px;
+    border-radius: 22px;
+  }
+  .caption {
+    display: none;
+  }
+  .input {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+    padding-top: 4px;
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .toolbarLeft {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .toolbarLeft > * {
+    flex-shrink: 0;
+  }
+  .divider {
+    display: none;
+  }
+  .toolbarRight {
+    width: 100%;
+    margin-left: 0;
+  }
+  .generate {
+    flex: 1 1 auto;
+    justify-content: center;
+    height: 44px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+  .generateHint {
+    display: none;
+  }
+  .contextRow {
+    gap: 6px;
+  }
+  .inpaintBanner {
+    flex-wrap: wrap;
+    font-size: 10px;
+    padding: 8px 10px;
+  }
+  .inpaintBanner .exit {
+    padding: 4px 8px;
+  }
+}

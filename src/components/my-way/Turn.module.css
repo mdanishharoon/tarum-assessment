@@ -154,6 +154,30 @@
   }
 }
 
+@media (max-width: 640px) {
+  .header {
+    padding: 4px 4px 4px 10px;
+  }
+  .prompt {
+    max-width: calc(100vw - 140px);
+    font-size: 12px;
+  }
+  .actionButton {
+    width: 30px;
+    height: 30px;
+  }
+  .actionButton svg {
+    width: 13px;
+    height: 13px;
+  }
+  /* Info popover is too dense for phone — anchor to viewport edges. */
+  .infoPopover {
+    font-size: 10.5px;
+    padding: 5px 10px;
+    gap: 6px;
+  }
+}
+
 .grid {
   display: grid;
   gap: 8px;

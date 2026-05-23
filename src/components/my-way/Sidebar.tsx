@@ -61,19 +61,42 @@ const SECONDARY: PrimaryItem[] = [
 type Props = {
   activeTool: SidebarTool;
   onSelectTool: (next: SidebarTool) => void;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 };
 
-export function Sidebar({ activeTool, onSelectTool }: Props) {
+export function Sidebar({
+  activeTool,
+  onSelectTool,
+  mobileOpen = false,
+  onMobileClose,
+}: Props) {
   const [collapsed, setCollapsed] = useState(false);
 
   function toggle() {
     setCollapsed((prev) => !prev);
   }
 
+  function selectTool(next: SidebarTool) {
+    onSelectTool(next);
+    onMobileClose?.();
+  }
+
   return (
+    <>
+      <button
+        type="button"
+        className={styles.scrim}
+        data-visible={mobileOpen}
+        aria-hidden={!mobileOpen}
+        tabIndex={mobileOpen ? 0 : -1}
+        aria-label="Close navigation"
+        onClick={onMobileClose}
+      />
     <aside
       className={styles.sidebar}
       data-collapsed={collapsed}
+      data-mobile-open={mobileOpen}
       aria-label="Workspace navigation"
     >
       <div className={styles.brand}>
@@ -120,7 +143,7 @@ export function Sidebar({ activeTool, onSelectTool }: Props) {
                     className={styles.tool}
                     data-active={active}
                     aria-current={active ? "page" : undefined}
-                    onClick={() => onSelectTool(key)}
+                    onClick={() => selectTool(key)}
                     title={label}
                   >
                     <span className={styles.toolBadge} style={{ background: accent }}>
@@ -165,5 +188,6 @@ export function Sidebar({ activeTool, onSelectTool }: Props) {
         </button>
       </div>
     </aside>
+    </>
   );
 }

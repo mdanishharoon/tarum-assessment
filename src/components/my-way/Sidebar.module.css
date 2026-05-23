@@ -354,12 +354,77 @@
   }
 }
 
+/* Mobile drawer: sidebar slides over content, dismissible via scrim or tool tap. */
+.scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 0;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .scrim {
+    display: block;
+  }
+  .scrim[data-visible="true"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 50;
+    width: 264px;
+    max-width: 84vw;
+    transform: translateX(-100%);
+    transition:
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: none;
+    will-change: transform;
+    border-right: 1.5px solid var(--mw-ghost-08);
+    padding-top: env(safe-area-inset-top);
+  }
+  .sidebar[data-collapsed="true"] {
+    /* Don't collapse to 0 in mobile drawer mode — the drawer itself is closed via transform. */
+    width: 264px;
+  }
+  .sidebar[data-mobile-open="true"] {
+    transform: translateX(0);
+    box-shadow: 18px 0 60px rgba(0, 0, 0, 0.45);
+  }
+  /* Drawer always shows full labels when opened. */
+  .sidebar .label,
+  .sidebar .sectionLabel,
+  .sidebar .kbd {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* Collapse toggle is irrelevant inside a drawer. */
+  .footer {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sidebar,
   .sectionLabel,
   .collapseToggle svg,
   .label,
-  .kbd {
+  .kbd,
+  .scrim {
     transition: none;
   }
 }

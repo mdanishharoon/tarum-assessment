@@ -231,3 +231,38 @@
     gap: var(--mw-space-36);
   }
 }
+
+@media (max-width: 640px) {
+  .canvas {
+    padding: var(--mw-space-18) var(--mw-space-14) 220px;
+    gap: var(--mw-space-22);
+  }
+  .empty {
+    padding: var(--mw-space-41) var(--mw-space-14) var(--mw-space-22);
+    translate: 0 -24px;
+    gap: 14px;
+  }
+  .gallery {
+    padding: 14px 0 4px;
+    /* Tilts feel cramped on a phone — flatten them. */
+  }
+  .galleryAvatar {
+    transform: translateY(var(--shift, 0px)) scale(var(--scale-active, 1));
+  }
+  .galleryAvatar + .galleryAvatar {
+    margin-left: -8px;
+  }
+  .galleryCard {
+    width: clamp(96px, 40vw, 140px);
+    border-radius: 18px;
+  }
+  .galleryTitle {
+    padding: 24px 10px 10px;
+    font-size: 11px;
+    -webkit-line-clamp: 2;
+  }
+  .emptyKicker {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+  }
+}
