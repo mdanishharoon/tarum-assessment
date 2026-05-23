@@ -1,0 +1,57 @@
+.page {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+}
+
+.main {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.decoration {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.decorationBlob {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(100px);
+  opacity: 0.08;
+}
+
+.decorationBlobA {
+  top: 12%;
+  right: -8%;
+  width: 38vw;
+  max-width: 520px;
+  aspect-ratio: 1;
+  background: var(--mw-amethyst);
+}
+
+.decorationBlobB {
+  bottom: -10%;
+  left: -5%;
+  width: 28vw;
+  max-width: 380px;
+  aspect-ratio: 1;
+  background: var(--mw-sunset);
+  opacity: 0.05;
+}

@@ -1,0 +1,95 @@
+/*
+ * Neon Playroom tokens, scoped to /my-way only.
+ * Everything inside .myway gets these custom properties; the rest of the app keeps its own.
+ */
+
+.myway {
+  /* Surface colors */
+  --mw-midnight: #141414;
+  --mw-midnight-soft: #1c1c1c;
+  --mw-midnight-elev: #1f1f1f;
+  --mw-ghost: #fdf9f0;
+
+  /* Accents */
+  --mw-lime: #c7ff69;
+  --mw-amethyst: #7a78ff;
+  --mw-sunset: #ff6d38;
+  --mw-emerald: #00a652;
+  --mw-sky: #478bff;
+  --mw-gold: #ffc412;
+  --mw-lavender: #ccccff;
+
+  /* Alpha helpers off ghost-white for strokes/overlays */
+  --mw-ghost-04: rgba(253, 249, 240, 0.04);
+  --mw-ghost-06: rgba(253, 249, 240, 0.06);
+  --mw-ghost-08: rgba(253, 249, 240, 0.08);
+  --mw-ghost-12: rgba(253, 249, 240, 0.12);
+  --mw-ghost-18: rgba(253, 249, 240, 0.18);
+  --mw-ghost-22: rgba(253, 249, 240, 0.22);
+  --mw-ghost-40: rgba(253, 249, 240, 0.4);
+  --mw-ghost-60: rgba(253, 249, 240, 0.6);
+  --mw-ghost-80: rgba(253, 249, 240, 0.8);
+
+  /* Midnight alphas for hover/active inside ghost regions */
+  --mw-midnight-08: rgba(20, 20, 20, 0.08);
+  --mw-midnight-12: rgba(20, 20, 20, 0.12);
+
+  /* Lime alphas — used very sparingly */
+  --mw-lime-24: rgba(199, 255, 105, 0.24);
+
+  /* Typography */
+  --mw-font-body: "Aeonik Pro Regular", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --mw-font-display: var(--font-bebas), "Aeonik Pro Regular", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale (px) */
+  --mw-text-caption: 11px;
+  --mw-text-body-sm: 12px;
+  --mw-text-body: 14px;
+  --mw-text-body-lg: 16px;
+  --mw-text-subheading: 18px;
+  --mw-text-heading: 22px;
+  --mw-text-heading-lg: 36px;
+  --mw-text-display: 96px;
+
+  /* Spacing (px — Neon Playroom scale) */
+  --mw-space-6: 6px;
+  --mw-space-7: 7px;
+  --mw-space-9: 9px;
+  --mw-space-14: 14px;
+  --mw-space-18: 18px;
+  --mw-space-22: 22px;
+  --mw-space-26: 26px;
+  --mw-space-27: 27px;
+  --mw-space-36: 36px;
+  --mw-space-41: 41px;
+  --mw-space-66: 66px;
+
+  /* Radii — keep the unusual numbers, don't round */
+  --mw-radius-sm: 2.7px;
+  --mw-radius-link: 20.7px;
+  --mw-radius-btn: 25.146px;
+  --mw-radius-mid: 28.8px;
+  --mw-radius-card: 43.2px;
+  --mw-radius-card-lg: 64.8px;
+  --mw-radius-pill: 1000px;
+
+  /* Motion */
+  --mw-ease-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --mw-ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Button edges — 1px inset highlights for tactile feel (not elevation shadows) */
+  --mw-edge-light: rgba(253, 249, 240, 0.08);
+  --mw-edge-light-strong: rgba(253, 249, 240, 0.14);
+  --mw-edge-shadow: rgba(20, 20, 20, 0.18);
+  --mw-edge-lime: rgba(255, 255, 255, 0.22);
+  --mw-edge-lime-low: rgba(20, 20, 20, 0.08);
+
+  /* Layout vars */
+  --mw-header-h: 64px;
+  --mw-bar-max: 840px;
+  --mw-canvas-max: 1400px;
+  --mw-turn-max: 780px;
+  --mw-bar-gutter: 22px;
+  --mw-bar-bottom: 24px;
+}

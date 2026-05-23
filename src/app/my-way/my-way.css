@@ -1,0 +1,72 @@
+/*
+ * Page-level styles for /my-way. Acts as a hard reset away from the legacy Forge styling
+ * since we want this surface to feel like a totally different product.
+ */
+
+@import url("https://db.onlinewebfonts.com/c/12ff62164c9778917bddb93c6379cf47?family=Aeonik+Pro+Regular");
+
+.myway {
+  background: var(--mw-midnight);
+  color: var(--mw-ghost);
+  font-family: var(--mw-font-body);
+  font-size: var(--mw-text-body);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.myway *,
+.myway *::before,
+.myway *::after {
+  box-sizing: border-box;
+}
+
+.myway button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.myway input,
+.myway textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+.myway ::selection {
+  background: var(--mw-lime);
+  color: var(--mw-midnight);
+}
+
+/* Strip default focus, then re-add a deliberate one */
+.myway :focus {
+  outline: none;
+}
+
+.myway :focus-visible {
+  outline: 2px solid var(--mw-lime);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling — thin, ghosty, unobtrusive */
+.myway *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.myway *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.myway *::-webkit-scrollbar-thumb {
+  background: var(--mw-ghost-12);
+  border-radius: 999px;
+}
+
+.myway *::-webkit-scrollbar-thumb:hover {
+  background: var(--mw-ghost-22);
+}
