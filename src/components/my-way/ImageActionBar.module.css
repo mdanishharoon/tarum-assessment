@@ -1,0 +1,107 @@
+.wrap {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%) translateY(8px) scale(0.985);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition:
+    opacity 240ms var(--mw-ease-quint),
+    transform 280ms var(--mw-ease-quint);
+}
+
+.wrap[data-visible="true"] {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.bar {
+  display: inline-flex;
+  align-items: center;
+  background: var(--mw-midnight);
+  border: 1.5px solid var(--mw-ghost-18);
+  border-radius: var(--mw-radius-pill);
+  padding: 4px;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 var(--mw-edge-light-strong);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 14px;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--mw-ghost-80);
+  font-size: var(--mw-text-body-sm);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background-color 140ms var(--mw-ease-quint),
+    color 140ms var(--mw-ease-quint),
+    transform 180ms var(--mw-ease-quint);
+}
+
+.button:hover {
+  background: var(--mw-ghost-08);
+  color: var(--mw-ghost);
+}
+
+.button[data-emphasis="true"] {
+  background: var(--mw-lime);
+  color: var(--mw-midnight);
+  font-weight: 700;
+  box-shadow:
+    inset 0 1px 0 var(--mw-edge-lime),
+    inset 0 -1px 0 var(--mw-edge-lime-low);
+}
+
+.button[data-emphasis="true"]:hover {
+  background: oklch(96% 0.21 124);
+  filter: brightness(1.03);
+}
+
+.button[data-emphasis="true"]:active {
+  box-shadow:
+    inset 0 1px 0 transparent,
+    inset 0 1px 1px var(--mw-edge-lime-low);
+}
+
+.button:active {
+  transform: scale(0.96);
+}
+
+.button svg {
+  width: 12px;
+  height: 12px;
+}
+
+.divider {
+  width: 1.5px;
+  height: 16px;
+  background: var(--mw-ghost-12);
+}
+
+@media (max-width: 540px) {
+  .wrap {
+    bottom: 8px;
+  }
+  .button {
+    padding: 0 10px;
+    height: 28px;
+    font-size: 11px;
+  }
+  .button .label {
+    display: none;
+  }
+  .button svg {
+    width: 14px;
+    height: 14px;
+  }
+}

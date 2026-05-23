@@ -1,0 +1,105 @@
+.scrollWrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
+.canvas {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mw-space-14);
+  padding: var(--mw-space-22) var(--mw-bar-gutter) var(--mw-space-22);
+  width: 100%;
+  max-width: var(--mw-canvas-max);
+  margin: 0 auto;
+  min-height: 100%;
+}
+
+.canvas[data-empty="true"] {
+  align-items: stretch;
+  justify-content: center;
+  padding-bottom: var(--mw-space-66);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mw-space-22);
+  padding: var(--mw-space-66) var(--mw-space-22);
+  color: var(--mw-ghost-60);
+}
+
+.emptyShapes {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.7;
+}
+
+.emptyDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+}
+
+.emptyHints {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.emptyHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1.5px solid var(--mw-ghost-12);
+  border-radius: var(--mw-radius-pill);
+  color: var(--mw-ghost-80);
+  font-size: var(--mw-text-body-sm);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  box-shadow: inset 0 1px 0 var(--mw-edge-light);
+  transition:
+    border-color 160ms var(--mw-ease-quint),
+    color 160ms var(--mw-ease-quint),
+    background-color 160ms var(--mw-ease-quint),
+    box-shadow 160ms var(--mw-ease-quint),
+    transform 140ms var(--mw-ease-quint);
+}
+
+.emptyHint:hover {
+  color: var(--mw-midnight);
+  background: var(--mw-ghost);
+  border-color: var(--mw-ghost);
+  box-shadow:
+    inset 0 1px 0 var(--mw-edge-lime),
+    inset 0 -1px 0 var(--mw-edge-lime-low);
+}
+
+.emptyHint:active {
+  transform: scale(0.96);
+  box-shadow: inset 0 0 0 transparent;
+}
+
+.emptySig {
+  font-size: var(--mw-text-caption);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mw-ghost-40);
+  font-weight: 500;
+}
+
+@media (max-width: 720px) {
+  .canvas {
+    padding: var(--mw-space-22) var(--mw-space-14) 0;
+    gap: var(--mw-space-36);
+  }
+}

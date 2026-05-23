@@ -1,0 +1,131 @@
+.loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--mw-midnight-soft);
+  overflow: hidden;
+}
+
+.loading::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at var(--mw-blob-x, 30%) var(--mw-blob-y, 35%),
+      var(--mw-blob-color, var(--mw-amethyst)) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at calc(100% - var(--mw-blob-x, 30%)) calc(100% - var(--mw-blob-y, 35%)),
+      var(--mw-blob-color-b, var(--mw-sunset)) 0%,
+      transparent 60%
+    );
+  opacity: 0.3;
+  filter: blur(38px);
+  animation: drift 6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  z-index: 0;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(253, 249, 240, 0.06) 50%,
+    transparent 62%
+  );
+  background-size: 220% 100%;
+  background-position: 130% 0;
+  animation: sheen 4.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(5, 5px);
+  grid-template-rows: repeat(5, 5px);
+  gap: 4px;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--mw-ghost);
+  opacity: 0.22;
+  animation: ripple 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: calc(var(--mw-ring) * 220ms);
+}
+
+.label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+  font-family: var(--mw-font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mw-ghost-60);
+}
+
+.label strong {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  color: var(--mw-ghost);
+}
+
+@keyframes ripple {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(4%, 3%, 0) scale(1.05);
+  }
+}
+
+@keyframes sheen {
+  0% {
+    background-position: 130% 0;
+  }
+  60% {
+    background-position: -30% 0;
+  }
+  100% {
+    background-position: -30% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading::before,
+  .loading::after {
+    animation: none;
+  }
+  .dot {
+    animation: none;
+    opacity: 0.5;
+  }
+}
