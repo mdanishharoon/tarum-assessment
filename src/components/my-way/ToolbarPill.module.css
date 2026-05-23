@@ -1,0 +1,203 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px 0 14px;
+  background: transparent;
+  border: 1.5px solid var(--mw-ghost-12);
+  border-radius: var(--mw-radius-btn);
+  color: var(--mw-ghost-80);
+  font-size: var(--mw-text-body-sm);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 var(--mw-edge-light);
+  transition:
+    border-color 160ms var(--mw-ease-quint),
+    background-color 160ms var(--mw-ease-quint),
+    box-shadow 160ms var(--mw-ease-quint),
+    color 160ms var(--mw-ease-quint),
+    transform 140ms var(--mw-ease-quint);
+}
+
+.pill:hover {
+  border-color: var(--mw-ghost-22);
+  color: var(--mw-ghost);
+  background: var(--mw-ghost-04);
+  box-shadow: inset 0 1px 0 var(--mw-edge-light-strong);
+}
+
+.pill:active {
+  transform: scale(0.96);
+  box-shadow: inset 0 0 0 transparent;
+}
+
+.pill[data-open="true"] {
+  border-color: var(--mw-ghost);
+  color: var(--mw-ghost);
+  background: var(--mw-ghost-06);
+  box-shadow: inset 0 1px 0 var(--mw-edge-light-strong);
+}
+
+.pill svg {
+  width: 12px;
+  height: 12px;
+  color: var(--mw-ghost-60);
+  transition: transform 220ms var(--mw-ease-quint);
+}
+
+.pill[data-open="true"] svg {
+  transform: rotate(180deg);
+  color: var(--mw-ghost);
+}
+
+.label {
+  color: var(--mw-ghost-60);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+}
+
+.value {
+  color: var(--mw-ghost);
+  font-weight: 500;
+}
+
+.pill[data-open="true"] .label {
+  color: var(--mw-ghost-80);
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  min-width: max(180px, 100%);
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 6px;
+  background: var(--mw-midnight-elev);
+  border: 1.5px solid var(--mw-ghost-18);
+  border-radius: var(--mw-radius-mid);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transform-origin: top left;
+  animation: popIn 220ms var(--mw-ease-quint);
+}
+
+.popover[data-align="end"] {
+  left: auto;
+  right: 0;
+  transform-origin: top right;
+}
+
+.popover[data-align="up"] {
+  top: auto;
+  bottom: calc(100% + 8px);
+  transform-origin: bottom left;
+}
+
+.popover[data-align="up-end"] {
+  top: auto;
+  bottom: calc(100% + 8px);
+  left: auto;
+  right: 0;
+  transform-origin: bottom right;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--mw-radius-mid) - 8px);
+  color: var(--mw-ghost-80);
+  font-size: var(--mw-text-body);
+  font-weight: 500;
+  text-align: left;
+  letter-spacing: 0.01em;
+  transition:
+    background-color 140ms var(--mw-ease-quint),
+    color 140ms var(--mw-ease-quint);
+}
+
+.option:hover {
+  background: var(--mw-ghost-06);
+  color: var(--mw-ghost);
+}
+
+.option[data-active="true"] {
+  color: var(--mw-ghost);
+  background: var(--mw-ghost-08);
+}
+
+.optionMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--mw-ghost-22);
+  color: var(--mw-midnight);
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.option[data-active="true"] .optionMark {
+  background: var(--mw-lime);
+  border-color: var(--mw-lime);
+}
+
+.optionMark::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--mw-midnight);
+  opacity: 0;
+  transition: opacity 160ms var(--mw-ease-quint);
+}
+
+.option[data-active="true"] .optionMark::after {
+  opacity: 1;
+}
+
+.optionMeta {
+  margin-left: auto;
+  font-size: var(--mw-text-caption);
+  font-weight: 500;
+  color: var(--mw-ghost-40);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popover {
+    animation: none;
+  }
+  .pill svg {
+    transition: none;
+  }
+}
