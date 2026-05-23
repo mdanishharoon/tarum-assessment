@@ -1,15 +1,19 @@
 .dock {
-  position: relative;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 18;
-  flex-shrink: 0;
   padding: var(--mw-space-9) var(--mw-bar-gutter) var(--mw-bar-bottom);
   background: transparent;
+  pointer-events: none;
 }
 
 .barWrap {
   position: relative;
   max-width: var(--mw-bar-max);
   margin: 0 auto;
+  pointer-events: auto;
 }
 
 .bar {
@@ -111,7 +115,7 @@
 }
 
 .contextRemove:active {
-  transform: scale(0.92);
+  transform: scale(0.96);
 }
 
 .contextRemove svg {
@@ -258,11 +262,15 @@
     inset 0 1px 1px var(--mw-edge-lime-low);
 }
 
-.generate:disabled {
+.generate[data-disabled="true"] {
   background: var(--mw-ghost-22);
   color: var(--mw-ghost-60);
-  cursor: not-allowed;
   box-shadow: none;
+  filter: none;
+}
+
+.generate[data-disabled="true"]:hover {
+  background: var(--mw-ghost-22);
   filter: none;
 }
 
@@ -280,7 +288,7 @@
   box-shadow: inset 0 1px 0 var(--mw-edge-lime), inset 0 -1px 0 var(--mw-edge-lime-low);
 }
 
-.generate:disabled .generateHint {
+.generate[data-disabled="true"] .generateHint {
   display: none;
 }
 

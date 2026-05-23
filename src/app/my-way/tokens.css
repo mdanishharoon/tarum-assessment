@@ -92,4 +92,105 @@
   --mw-turn-max: 780px;
   --mw-bar-gutter: 22px;
   --mw-bar-bottom: 24px;
+
+  /* transitions-dev — semantic names used by t-* utility classes */
+  /* Icon swap */
+  --icon-swap-dur: 200ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+  /* Avatar group hover */
+  --avatar-lift: -6px;
+  --avatar-dur: 320ms;
+  --avatar-scale: 1.06;
+  --avatar-falloff: 0.45;
+  --avatar-ease-in: cubic-bezier(0.22, 1, 0.36, 1);
+  --avatar-ease-out: cubic-bezier(0.34, 3.85, 0.64, 1);
+  /* Error state shake */
+  --shake-distance: 8px;
+  --shake-overshoot: 4px;
+  --shake-dur-a: 80ms;
+  --shake-dur-b: 60ms;
+  --shake-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* transitions-dev — utility CSS */
+
+.myway .t-icon-swap {
+  position: relative;
+  display: inline-grid;
+}
+
+.myway .t-icon-swap .t-icon {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity var(--icon-swap-dur) var(--icon-swap-ease),
+    filter var(--icon-swap-dur) var(--icon-swap-ease),
+    transform var(--icon-swap-dur) var(--icon-swap-ease);
+  will-change: opacity, filter, transform;
+}
+
+.myway .t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+.myway .t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.myway .t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+.myway .t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+  opacity: 0;
+  filter: blur(var(--icon-swap-blur));
+  transform: scale(var(--icon-swap-start-scale));
+}
+
+.myway .t-avatar {
+  transform-origin: center;
+  transform: translateY(var(--shift, 0px)) scale(var(--scale-active, 1));
+  transition: transform var(--avatar-dur) var(--avatar-ease-in);
+  will-change: transform;
+}
+
+@keyframes t-input-shake {
+  0% {
+    transform: translateX(0);
+    animation-timing-function: var(--shake-ease);
+  }
+  28.57% {
+    transform: translateX(var(--shake-distance));
+    animation-timing-function: var(--shake-ease);
+  }
+  57.14% {
+    transform: translateX(calc(var(--shake-distance) * -1));
+    animation-timing-function: var(--shake-ease);
+  }
+  78.57% {
+    transform: translateX(var(--shake-overshoot));
+    animation-timing-function: var(--shake-ease);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.myway .t-input.is-shaking {
+  animation: t-input-shake
+    calc(var(--shake-dur-a) * 2 + var(--shake-dur-b) * 2) linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .myway .t-icon-swap .t-icon {
+    transition: none !important;
+  }
+  .myway .t-avatar {
+    transition: none !important;
+    transform: none !important;
+  }
+  .myway .t-input {
+    animation: none !important;
+    transform: none !important;
+  }
 }

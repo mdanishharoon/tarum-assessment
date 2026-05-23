@@ -4,6 +4,25 @@
   gap: var(--mw-space-14);
   padding-bottom: var(--mw-space-14);
   border-bottom: 1.5px dashed var(--mw-ghost-08);
+  animation: videoIn 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: top center;
+}
+
+@keyframes videoIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    animation: none;
+  }
 }
 
 .frames {
@@ -111,7 +130,7 @@
 }
 
 .motionCell:active {
-  transform: scale(0.92);
+  transform: scale(0.96);
 }
 
 .motionCell svg {

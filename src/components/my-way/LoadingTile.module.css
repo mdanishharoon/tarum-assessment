@@ -8,6 +8,13 @@
   gap: 12px;
   background: var(--mw-midnight-soft);
   overflow: hidden;
+  opacity: 1;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.loading[data-visible="false"] {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .loading::before {

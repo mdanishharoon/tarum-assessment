@@ -48,13 +48,15 @@
   object-fit: cover;
   display: block;
   opacity: 0;
+  transform: scale(1.02);
   transition:
-    opacity 320ms var(--mw-ease-quint),
-    transform 600ms var(--mw-ease-quint);
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.tile[data-status="ready"] .image {
+.image[data-loaded="true"] {
   opacity: 1;
+  transform: scale(1);
 }
 
 .videoWrap {

@@ -101,7 +101,14 @@ export const Turn = forwardRef<HTMLElement, Props>(function Turn(
             aria-label={copied ? "Prompt copied" : "Copy prompt"}
             title={copied ? "Copied" : "Copy prompt"}
           >
-            {copied ? <IconCheck /> : <IconCopy />}
+            <span className="t-icon-swap" data-state={copied ? "b" : "a"} aria-hidden>
+              <span className="t-icon" data-icon="a">
+                <IconCopy />
+              </span>
+              <span className="t-icon" data-icon="b">
+                <IconCheck />
+              </span>
+            </span>
           </button>
         </div>
       </header>

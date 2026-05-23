@@ -11,7 +11,7 @@ import {
   useState,
 } from "react";
 import { Segmented } from "./Segmented";
-import { ToolbarPill } from "./ToolbarPill";
+import { SettingsPill } from "./SettingsPill";
 import { VideoControls } from "./VideoControls";
 import {
   IconArrowReturn,
@@ -46,19 +46,6 @@ const PLACEHOLDERS = [
   "Type. We'll do the rest.",
   "Pictures aren't going to make themselves.",
   "Sentence in, image out.",
-];
-
-const RATIOS: { value: MwRatio; label: string }[] = [
-  { value: "1:1", label: "Square" },
-  { value: "4:3", label: "Landscape" },
-  { value: "3:4", label: "Portrait" },
-  { value: "16:9", label: "Cinema" },
-];
-
-const DURATIONS: { value: MwDuration; label: string }[] = [
-  { value: 4, label: "4 seconds" },
-  { value: 6, label: "6 seconds" },
-  { value: 8, label: "8 seconds" },
 ];
 
 const MODE_OPTIONS = [
@@ -126,6 +113,7 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
   const [refs, setRefs] = useState<MwRef[]>([]);
   const [firstFrame, setFirstFrame] = useState<string | null>(null);
   const [lastFrame, setLastFrame] = useState<string | null>(null);
+  const barRef = useRef<HTMLFormElement | null>(null);
 
   // Inpaint mode is implicit: triggered when focusedImage came from an Edit action.
   const inpaintActive = focusedImage?.intent === "edit";
@@ -149,7 +137,18 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
     (event?: FormEvent) => {
       event?.preventDefault();
       const trimmed = prompt.trim();
-      if (!trimmed) return;
+      if (!trimmed) {
+        const bar = barRef.current;
+        if (bar) {
+          bar.classList.remove("is-shaking");
+          void bar.offsetWidth;
+          bar.classList.add("is-shaking");
+          window.setTimeout(() => {
+            bar.classList.remove("is-shaking");
+          }, 320);
+        }
+        return;
+      }
       onSubmit({
         prompt: trimmed,
         mode: effectiveMode,
@@ -204,10 +203,6 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
     setRefs((prev) => [...prev, { id: `ref-${Date.now()}`, url, label: file.name }]);
   }
 
-  const ratioRender = RATIOS.find((r) => r.value === ratio);
-  const modelRender = MODELS.find((m) => m.id === model);
-  const durationRender = DURATIONS.find((d) => d.value === duration);
-
   return (
     <div className={styles.dock}>
       <div className={styles.barWrap}>
@@ -221,7 +216,8 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
 
         <form
           id={formId}
-          className={styles.bar}
+          ref={barRef}
+          className={`${styles.bar} t-input`}
           data-mode={effectiveMode}
           onSubmit={submit}
         >
@@ -337,35 +333,15 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
 
               <span className={styles.divider} aria-hidden />
 
-              <ToolbarPill
-                label="Model"
-                value={model}
-                options={MODELS.map((m) => ({
-                  value: m.id as string,
-                  label: m.label,
-                  meta: m.short,
-                }))}
-                onChange={(next) => setModel(next as string)}
-                renderValue={() => modelRender?.short ?? "—"}
+              <SettingsPill
+                model={model}
+                onModel={setModel}
+                ratio={ratio}
+                onRatio={setRatio}
+                duration={duration}
+                onDuration={setDuration}
+                showDuration={effectiveMode === "video"}
               />
-
-              <ToolbarPill
-                label="Ratio"
-                value={ratio}
-                options={RATIOS.map((r) => ({ value: r.value, label: r.label, meta: r.value }))}
-                onChange={(next) => setRatio(next as MwRatio)}
-                renderValue={() => ratioRender?.value ?? "—"}
-              />
-
-              {effectiveMode === "video" && (
-                <ToolbarPill
-                  label="Length"
-                  value={duration}
-                  options={DURATIONS.map((d) => ({ value: d.value, label: d.label, meta: `${d.value}s` }))}
-                  onChange={(next) => setDuration(next as MwDuration)}
-                  renderValue={() => (durationRender ? `${durationRender.value}s` : "—")}
-                />
-              )}
 
               {effectiveMode !== "inpaint" && (
                 <Segmented
@@ -381,7 +357,7 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
               <button
                 type="submit"
                 className={styles.generate}
-                disabled={prompt.trim().length === 0}
+                data-disabled={prompt.trim().length === 0}
               >
                 {effectiveMode === "inpaint" ? "Apply" : "Generate"}
                 <span className={styles.generateHint} aria-hidden>

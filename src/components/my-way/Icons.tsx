@@ -252,12 +252,22 @@ export function IconBrandMark(props: IconProps) {
   return (
     <svg
       viewBox="0 0 32 32"
-      fill="currentColor"
+      fill="none"
       stroke="none"
       aria-hidden="true"
       {...props}
     >
-      <path d="M16 0 L19.2 12.8 L32 16 L19.2 19.2 L16 32 L12.8 19.2 L0 16 L12.8 12.8 Z" />
+      <rect
+        x="2"
+        y="7"
+        width="21"
+        height="21"
+        rx="5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+      />
+      <rect x="9" y="2" width="21" height="21" rx="5" fill="currentColor" />
     </svg>
   );
 }
@@ -295,6 +305,46 @@ export function IconInfo(props: IconProps) {
       <circle cx="12" cy="12" r="9" />
       <line x1="12" y1="11" x2="12" y2="16.5" />
       <circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function IconChip(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="6" y="6" width="12" height="12" rx="2" />
+      <rect x="9.5" y="9.5" width="5" height="5" rx="0.5" />
+      <line x1="6" y1="9" x2="4" y2="9" />
+      <line x1="6" y1="12" x2="4" y2="12" />
+      <line x1="6" y1="15" x2="4" y2="15" />
+      <line x1="18" y1="9" x2="20" y2="9" />
+      <line x1="18" y1="12" x2="20" y2="12" />
+      <line x1="18" y1="15" x2="20" y2="15" />
+      <line x1="9" y1="6" x2="9" y2="4" />
+      <line x1="12" y1="6" x2="12" y2="4" />
+      <line x1="15" y1="6" x2="15" y2="4" />
+      <line x1="9" y1="18" x2="9" y2="20" />
+      <line x1="12" y1="18" x2="12" y2="20" />
+      <line x1="15" y1="18" x2="15" y2="20" />
+    </svg>
+  );
+}
+
+export function IconAspect(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="3" y="6" width="18" height="12" rx="1.5" />
+    </svg>
+  );
+}
+
+export function IconSliders(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <line x1="4" y1="7" x2="20" y2="7" />
+      <line x1="4" y1="17" x2="20" y2="17" />
+      <circle cx="14" cy="7" r="2.3" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="17" r="2.3" fill="currentColor" stroke="none" />
     </svg>
   );
 }

@@ -7,6 +7,8 @@ type Props = {
   startedAt: number;
   delay: number;
   seedId: string;
+  visible?: boolean;
+  ready?: boolean;
 };
 
 const BLOB_COLORS = [
@@ -41,19 +43,32 @@ function hashSeed(seed: string): number {
   return h;
 }
 
-function progressAt(elapsed: number, delay: number): number {
+function progressAt(elapsed: number, delay: number, ready: boolean): number {
+  // Phase 1 — generation in progress. Asymptotic ramp to 95 over `delay` ms.
   const ratio = Math.max(0, elapsed / Math.max(delay, 1));
   const value = 1 - Math.exp(-ratio * 2.6);
-  return Math.min(96, Math.floor(value * 96));
+  const genPercent = Math.min(95, Math.floor(value * 95));
+  if (!ready) return genPercent;
+  // Phase 2 — generation done, media still buffering. Climb 95 → 99 linearly.
+  const overTime = Math.max(0, elapsed - delay);
+  return Math.min(99, 95 + Math.floor(overTime / 700));
 }
 
-export function LoadingTile({ startedAt, delay, seedId }: Props) {
-  const [percent, setPercent] = useState<number>(() => progressAt(Date.now() - startedAt, delay));
+export function LoadingTile({
+  startedAt,
+  delay,
+  seedId,
+  visible = true,
+  ready = false,
+}: Props) {
+  const [percent, setPercent] = useState<number>(() =>
+    progressAt(Date.now() - startedAt, delay, ready),
+  );
   const tickRef = useRef<number | null>(null);
 
   useEffect(() => {
     function tick() {
-      const next = progressAt(Date.now() - startedAt, delay);
+      const next = progressAt(Date.now() - startedAt, delay, ready);
       setPercent((prev) => (prev === next ? prev : next));
       tickRef.current = window.setTimeout(tick, 140);
     }
@@ -61,7 +76,7 @@ export function LoadingTile({ startedAt, delay, seedId }: Props) {
     return () => {
       if (tickRef.current) window.clearTimeout(tickRef.current);
     };
-  }, [startedAt, delay]);
+  }, [startedAt, delay, ready]);
 
   const { colorA, colorB, bx, by } = useMemo(() => {
     const h = hashSeed(seedId);
@@ -74,6 +89,7 @@ export function LoadingTile({ startedAt, delay, seedId }: Props) {
   return (
     <div
       className={styles.loading}
+      data-visible={visible}
       style={
         {
           "--mw-blob-color": colorA,

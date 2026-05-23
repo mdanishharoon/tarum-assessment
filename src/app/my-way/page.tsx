@@ -73,6 +73,16 @@ export default function MyWayPage() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    console.log(
+      "%c FORGE %c sparks fly when you generate. %c⚡",
+      "background:#c7ff69;color:#141414;font-weight:700;padding:4px 10px;border-radius:6px;font-family:'Bebas Neue',sans-serif;letter-spacing:0.06em;",
+      "color:#fdf9f0;padding:4px 6px;font-weight:500;",
+      "color:#c7ff69;font-size:14px;",
+    );
+  }, []);
+
+  useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
@@ -272,6 +282,7 @@ export default function MyWayPage() {
             onRetry={handleRetry}
             onSuggest={handleSuggest}
           />
+          <div className={styles.bottomFade} aria-hidden />
           <PromptBar
             focusedImage={focused}
             onClearFocus={() => setFocused(null)}
