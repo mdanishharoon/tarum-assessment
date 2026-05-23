@@ -5,6 +5,7 @@
 }
 
 .chip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -23,11 +24,22 @@
   transition:
     border-color 160ms ease,
     background-color 160ms ease,
-    box-shadow 160ms ease;
+    box-shadow 160ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chip::before {
+  content: "";
+  position: absolute;
+  inset: -0.4rem 0;
 }
 
 .chip:hover {
   border-color: var(--stroke);
+}
+
+.chip:active {
+  transform: scale(0.96);
 }
 
 .chip[data-open="true"] {

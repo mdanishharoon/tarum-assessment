@@ -54,6 +54,7 @@
   --slab-highlight: oklch(100% 0 0 / 0.3);
   --bg-inset: oklch(91.5% 0.02 55);
   --inset-shadow: oklch(0% 0 0 / 0.05);
+  --image-outline: rgba(0, 0, 0, 0.1);
 }
 
 .dark {
@@ -79,6 +80,7 @@
   --slab-highlight: oklch(100% 0 0 / 0.06);
   --bg-inset: oklch(15.5% 0.01 65);
   --inset-shadow: oklch(0% 0 0 / 0.22);
+  --image-outline: rgba(255, 255, 255, 0.1);
 }
 
 html,

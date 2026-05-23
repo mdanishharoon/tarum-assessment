@@ -29,6 +29,10 @@
   transform: translateY(-1px);
 }
 
+.pill:active {
+  transform: scale(0.96);
+}
+
 .pill:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -48,7 +52,8 @@
     display: none;
   }
   .pill {
-    width: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
     padding: 0;
     justify-content: center;
   }
@@ -72,6 +77,10 @@
 
 .avatar:hover {
   transform: scale(1.05);
+}
+
+.avatar:active {
+  transform: scale(0.96);
 }
 
 .avatar:focus-visible {

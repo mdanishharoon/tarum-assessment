@@ -33,6 +33,7 @@
   font-weight: 600;
   color: var(--fg-default);
   letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 .body {
@@ -40,4 +41,5 @@
   max-width: 32ch;
   font-size: 0.9rem;
   line-height: 1.55;
+  text-wrap: pretty;
 }

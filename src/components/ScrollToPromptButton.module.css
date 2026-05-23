@@ -40,6 +40,10 @@
     background: var(--bg-surface);
   }
 
+  .button[data-visible="true"]:active {
+    transform: translateY(0) scale(0.96);
+  }
+
   .button:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
