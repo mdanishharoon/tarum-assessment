@@ -95,14 +95,14 @@ export function Canvas({ turns, focusedVariantId, onAction, onRetry, onSuggest }
 
   useEffect(() => {
     if (turns.length > turnCountRef.current) {
-      latestRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      latestRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     turnCountRef.current = turns.length;
   }, [turns.length]);
 
   if (turns.length === 0) {
     return (
-      <div className={styles.scrollWrap}>
+      <div className={styles.scrollWrap} data-mw-scroll>
         <div className={styles.canvas} data-empty>
           <div className={styles.empty}>
             <div className={styles.emptyShapes} aria-hidden>
@@ -152,7 +152,7 @@ export function Canvas({ turns, focusedVariantId, onAction, onRetry, onSuggest }
   }
 
   return (
-    <div className={styles.scrollWrap}>
+    <div className={styles.scrollWrap} data-mw-scroll>
       <div className={styles.canvas}>
         {turns.map((turn, index) => (
           <Turn
@@ -162,7 +162,7 @@ export function Canvas({ turns, focusedVariantId, onAction, onRetry, onSuggest }
             focusedVariantId={focusedVariantId}
             onAction={onAction}
             onRetry={onRetry}
-            ref={index === turns.length - 1 ? setLatestRef : undefined}
+            ref={index === 0 ? setLatestRef : undefined}
           />
         ))}
       </div>

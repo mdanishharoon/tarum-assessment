@@ -19,16 +19,18 @@ function readPersisted(): MwTurn[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((entry): entry is MwTurn => {
-      if (!entry || typeof entry !== "object") return false;
-      const t = entry as Record<string, unknown>;
-      return (
-        typeof t.id === "string" &&
-        typeof t.prompt === "string" &&
-        Array.isArray(t.variants) &&
-        typeof t.createdAt === "number"
-      );
-    });
+    return parsed
+      .filter((entry): entry is MwTurn => {
+        if (!entry || typeof entry !== "object") return false;
+        const t = entry as Record<string, unknown>;
+        return (
+          typeof t.id === "string" &&
+          typeof t.prompt === "string" &&
+          Array.isArray(t.variants) &&
+          typeof t.createdAt === "number"
+        );
+      })
+      .sort((a, b) => b.createdAt - a.createdAt);
   } catch {
     return [];
   }
@@ -62,7 +64,7 @@ export function subscribeTurns(listener: Listener): () => void {
 
 export function addTurn(turn: MwTurn): MwTurn[] {
   const current = loadTurns();
-  const next = [...current, turn].slice(-MAX_TURNS);
+  const next = [turn, ...current].slice(0, MAX_TURNS);
   memory = next;
   persist(next);
   notify(next);

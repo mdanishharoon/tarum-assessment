@@ -4,6 +4,7 @@ import {
   type FormEvent,
   type KeyboardEvent,
   useCallback,
+  useEffect,
   useId,
   useLayoutEffect,
   useMemo,
@@ -114,6 +115,60 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
   const [firstFrame, setFirstFrame] = useState<string | null>(null);
   const [lastFrame, setLastFrame] = useState<string | null>(null);
   const barRef = useRef<HTMLFormElement | null>(null);
+  const [hidden, setHidden] = useState(false);
+
+  // Hide the dock on downward scroll, reveal on upward scroll. Phone only.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 640px)");
+    const scroller = document.querySelector<HTMLElement>("[data-mw-scroll]");
+    if (!scroller) return;
+
+    let lastY = scroller.scrollTop;
+    let frame: number | null = null;
+
+    const measure = () => {
+      frame = null;
+      if (!mq.matches) {
+        setHidden(false);
+        return;
+      }
+      // Keep visible while the input is focused — typing reveals intent to engage.
+      if (
+        document.activeElement === textareaRef.current ||
+        barRef.current?.contains(document.activeElement)
+      ) {
+        setHidden(false);
+        return;
+      }
+      const y = scroller.scrollTop;
+      const delta = y - lastY;
+      lastY = y;
+      if (Math.abs(delta) < 6) return;
+      if (y < 80) {
+        setHidden(false);
+      } else if (delta > 0) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+    };
+
+    const onScroll = () => {
+      if (frame !== null) return;
+      frame = window.requestAnimationFrame(measure);
+    };
+    const onMqChange = () => {
+      if (!mq.matches) setHidden(false);
+    };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    mq.addEventListener("change", onMqChange);
+    return () => {
+      scroller.removeEventListener("scroll", onScroll);
+      mq.removeEventListener("change", onMqChange);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   // Inpaint mode is implicit: triggered when focusedImage came from an Edit action.
   const inpaintActive = focusedImage?.intent === "edit";
@@ -204,7 +259,7 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
   }
 
   return (
-    <div className={styles.dock}>
+    <div className={styles.dock} data-hidden={hidden}>
       <div className={styles.barWrap}>
         <span
           className={styles.caption}
