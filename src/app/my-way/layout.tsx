@@ -11,7 +11,7 @@ const bebas = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "Forge — AI Content Studio",
+  title: "Tarum — AI Content Studio",
   description: "A dense, opinionated AI image and video studio. Generate, edit, animate, fork.",
 };
 

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Forge — AI Content Studio";
+export const alt = "Tarum — AI Content Studio";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -38,7 +38,7 @@ export default function OpengraphImage() {
               fontFamily: "Georgia, serif",
             }}
           >
-            F
+            T
           </div>
           <span
             style={{
@@ -49,7 +49,7 @@ export default function OpengraphImage() {
               color: "#6b4f3a",
             }}
           >
-            Forge
+            Tarum
           </span>
         </div>
 
@@ -87,7 +87,7 @@ export default function OpengraphImage() {
           }}
         >
           <span>Flux 1.1 Pro · Stable Diffusion 3.5 · DALL·E 3</span>
-          <span style={{ color: "#e8866b", fontWeight: 600 }}>forge.ai</span>
+          <span style={{ color: "#e8866b", fontWeight: 600 }}>tarum.ai</span>
         </div>
       </div>
     ),

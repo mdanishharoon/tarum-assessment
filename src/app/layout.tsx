@@ -23,23 +23,23 @@ const googleSansFlex = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Forge — AI Content Studio",
-    template: "%s | Forge",
+    default: "Tarum — AI Content Studio",
+    template: "%s | Tarum",
   },
   description:
     "Generate images and videos from text prompts. A responsive AI content studio built with Next.js.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   openGraph: {
-    title: "Forge — AI Content Studio",
+    title: "Tarum — AI Content Studio",
     description: "Generate images and videos from text prompts.",
     url: "/",
-    siteName: "Forge",
+    siteName: "Tarum",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Forge — AI Content Studio",
+    title: "Tarum — AI Content Studio",
     description: "Generate images and videos from text prompts.",
   },
 };
