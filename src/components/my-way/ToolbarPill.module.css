@@ -57,21 +57,33 @@
   color: var(--mw-ghost);
 }
 
-.label {
+.pillIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--mw-ghost-60);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 10px;
+  transition: color 160ms var(--mw-ease-quint);
+}
+
+.pillIcon svg {
+  width: 13px;
+  height: 13px;
+  transition: none;
+  transform: none;
+}
+
+.pill:hover .pillIcon {
+  color: var(--mw-ghost);
+}
+
+.pill[data-open="true"] .pillIcon {
+  color: var(--mw-ghost);
 }
 
 .value {
   color: var(--mw-ghost);
   font-weight: 500;
-}
-
-.pill[data-open="true"] .label {
-  color: var(--mw-ghost-80);
+  font-variant-numeric: tabular-nums;
 }
 
 .popover {
@@ -152,6 +164,20 @@
   color: var(--mw-midnight);
   background: transparent;
   flex-shrink: 0;
+}
+
+.optionGlyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--mw-ghost-60);
+}
+
+.option[data-active="true"] .optionGlyph {
+  color: var(--mw-lime);
 }
 
 .option[data-active="true"] .optionMark {

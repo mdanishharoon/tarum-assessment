@@ -16,15 +16,16 @@ export type PillOption<T extends string | number> = {
   value: T;
   label: ReactNode;
   meta?: ReactNode;
+  glyph?: ReactNode;
 };
 
 type Props<T extends string | number> = {
-  label: string;
+  icon: ReactNode;
+  ariaLabel: string;
   value: T;
   options: PillOption<T>[];
   onChange: (next: T) => void;
   renderValue?: (option: PillOption<T> | undefined) => ReactNode;
-  /** Render up-aligned popover (useful when pill sits at bottom edge). */
   popoverDirection?: "up" | "down";
   className?: string;
 };
@@ -32,7 +33,8 @@ type Props<T extends string | number> = {
 type Align = "start" | "end" | "up" | "up-end";
 
 export function ToolbarPill<T extends string | number>({
-  label,
+  icon,
+  ariaLabel,
   value,
   options,
   onChange,
@@ -106,9 +108,12 @@ export function ToolbarPill<T extends string | number>({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={`${id}-listbox`}
+        aria-label={ariaLabel}
         onClick={toggle}
       >
-        <span className={styles.label}>{label}</span>
+        <span className={styles.pillIcon} aria-hidden>
+          {icon}
+        </span>
         <span className={styles.value}>
           {renderValue ? renderValue(active) : (active?.label ?? "—")}
         </span>
@@ -118,7 +123,7 @@ export function ToolbarPill<T extends string | number>({
         <div
           id={`${id}-listbox`}
           role="listbox"
-          aria-label={label}
+          aria-label={ariaLabel}
           className={styles.popover}
           data-align={align}
         >
@@ -137,7 +142,11 @@ export function ToolbarPill<T extends string | number>({
                   close();
                 }}
               >
-                <span className={styles.optionMark} aria-hidden />
+                {opt.glyph ? (
+                  <span className={styles.optionGlyph}>{opt.glyph}</span>
+                ) : (
+                  <span className={styles.optionMark} aria-hidden />
+                )}
                 {opt.label}
                 {opt.meta && <span className={styles.optionMeta}>{opt.meta}</span>}
               </button>

@@ -51,11 +51,25 @@
   color: var(--mw-ghost);
   flex-shrink: 0;
   translate: 0 -1px;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.brandLink:hover .brandMark {
+  transform: rotate(-8deg);
 }
 
 .brandMark svg {
   width: 100%;
   height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brandMark {
+    transition: none;
+  }
+  .brandLink:hover .brandMark {
+    transform: none;
+  }
 }
 
 .brandTag {
@@ -147,7 +161,7 @@
   padding: 0 12px;
   background: transparent;
   border: 0;
-  border-radius: 10px;
+  border-radius: 14px;
   color: var(--mw-ghost-80);
   font-family: inherit;
   font-size: var(--mw-text-body);
@@ -274,6 +288,7 @@
 }
 
 .collapseToggle {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -290,6 +305,12 @@
     background-color 160ms var(--mw-ease-quint),
     border-color 160ms var(--mw-ease-quint),
     transform 140ms var(--mw-ease-quint);
+}
+
+.collapseToggle::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
 }
 
 .collapseToggle:hover {
