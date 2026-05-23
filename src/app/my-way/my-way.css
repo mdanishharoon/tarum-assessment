@@ -42,16 +42,6 @@
   color: var(--mw-midnight);
 }
 
-/* Strip default focus, then re-add a deliberate one */
-.myway :focus {
-  outline: none;
-}
-
-.myway :focus-visible {
-  outline: 2px solid var(--mw-lime);
-  outline-offset: 2px;
-}
-
 /* Scrollbar styling — thin, ghosty, unobtrusive */
 .myway *::-webkit-scrollbar {
   width: 6px;

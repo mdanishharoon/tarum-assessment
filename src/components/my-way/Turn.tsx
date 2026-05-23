@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { VariantTile } from "./VariantTile";
 import type { ImageAction } from "./ImageActionBar";
 import { IconCheck, IconCopy, IconInfo } from "./Icons";
@@ -41,10 +41,40 @@ export const Turn = forwardRef<HTMLElement, Props>(function Turn(
   const count = turn.variants.length as 1 | 2 | 4;
   const [copied, setCopied] = useState(false);
   const [now, setNow] = useState(Date.now());
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const [infoSide, setInfoSide] = useState<"left" | "right">("right");
 
   useEffect(() => {
     const id = window.setInterval(() => setNow(Date.now()), 30_000);
     return () => window.clearInterval(id);
+  }, []);
+
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    const pop = popoverRef.current;
+    if (!wrap || !pop) return;
+    const section = wrap.closest("section");
+
+    const measure = () => {
+      const wrapRect = wrap.getBoundingClientRect();
+      const popWidth = pop.offsetWidth;
+      const safeLeft = section
+        ? section.getBoundingClientRect().left
+        : 16;
+      const projectedLeft = wrapRect.right - popWidth;
+      setInfoSide(projectedLeft < safeLeft ? "left" : "right");
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (section) ro.observe(section);
+    ro.observe(pop);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
   function handleCopy() {
@@ -70,7 +100,7 @@ export const Turn = forwardRef<HTMLElement, Props>(function Turn(
           {turn.prompt}
         </p>
         <div className={styles.actions}>
-          <div className={styles.infoWrap}>
+          <div className={styles.infoWrap} ref={wrapRef}>
             <button
               type="button"
               className={styles.actionButton}
@@ -83,6 +113,8 @@ export const Turn = forwardRef<HTMLElement, Props>(function Turn(
               id={`turn-${turn.id}-info`}
               role="tooltip"
               className={styles.infoPopover}
+              data-side={infoSide}
+              ref={popoverRef}
             >
               <span>{modelShort}</span>
               <span className={styles.metaDot} aria-hidden />
