@@ -84,8 +84,12 @@
 }
 
 .sidebar[data-collapsed="true"] .brandTag {
-  opacity: 0;
-  pointer-events: none;
+  display: none;
+}
+
+.sidebar[data-collapsed="true"] .brand {
+  padding: 0;
+  justify-content: center;
 }
 
 .nav {
