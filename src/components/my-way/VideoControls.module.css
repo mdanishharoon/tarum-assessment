@@ -93,51 +93,6 @@
   user-select: none;
 }
 
-.motion {
-  display: inline-grid;
-  grid-template-columns: repeat(3, 22px);
-  grid-template-rows: repeat(3, 22px);
-  gap: 3px;
-  padding: 4px;
-  background: var(--mw-ghost-04);
-  border: 1.5px solid var(--mw-ghost-12);
-  border-radius: var(--mw-radius-link);
-  flex-shrink: 0;
-}
-
-.motionCell {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 0;
-  border-radius: 5px;
-  color: var(--mw-ghost-40);
-  transition:
-    background-color 140ms var(--mw-ease-quint),
-    color 140ms var(--mw-ease-quint),
-    transform 160ms var(--mw-ease-quint);
-}
-
-.motionCell:hover {
-  background: var(--mw-ghost-06);
-  color: var(--mw-ghost);
-}
-
-.motionCell[data-active="true"] {
-  background: var(--mw-ghost);
-  color: var(--mw-midnight);
-}
-
-.motionCell:active {
-  transform: scale(0.96);
-}
-
-.motionCell svg {
-  width: 11px;
-  height: 11px;
-}
-
 .sequence {
   display: inline-flex;
   align-items: center;

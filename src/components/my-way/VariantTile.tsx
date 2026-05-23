@@ -22,9 +22,11 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
   const [pinned, setPinned] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [mediaLoaded, setMediaLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     setMediaLoaded(false);
+    setLoadError(false);
   }, [variant.url]);
 
   useEffect(() => {
@@ -49,7 +51,8 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
   }
 
   const showActions =
-    variant.status === "ready" && mediaLoaded && (hovered || pinned);
+    variant.status === "ready" && mediaLoaded && !loadError && (hovered || pinned);
+  const showError = variant.status === "error" || loadError;
 
   return (
     <div
@@ -64,7 +67,7 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
         if (variant.status === "ready") setPinned((prev) => !prev);
       }}
     >
-      {variant.status !== "error" && (
+      {!showError && (
         <LoadingTile
           startedAt={variant.startedAt}
           delay={variant.delay}
@@ -74,7 +77,7 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
         />
       )}
 
-      {variant.status === "ready" && variant.kind === "image" && (
+      {variant.status === "ready" && variant.kind === "image" && !loadError && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           className={styles.image}
@@ -82,6 +85,7 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
           alt={variant.alt}
           data-loaded={mediaLoaded}
           onLoad={() => setMediaLoaded(true)}
+          onError={() => setLoadError(true)}
         />
       )}
 
@@ -100,6 +104,7 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
             onLoadedMetadata={() => setMediaLoaded(true)}
             onLoadedData={() => setMediaLoaded(true)}
             onCanPlay={() => setMediaLoaded(true)}
+            onError={() => setLoadError(true)}
           />
           {mediaLoaded && !playing && (
             <button
@@ -119,7 +124,7 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
         </div>
       )}
 
-      {variant.status === "error" && (
+      {showError && (
         <div className={styles.error}>
           <div className={styles.errorTitle}>Hmm.</div>
           <div className={styles.errorBody}>Couldn&apos;t make this one. Try again?</div>
@@ -128,6 +133,8 @@ export function VariantTile({ variant, ratio, focused, onAction, onRetry }: Prop
             className={styles.errorRetry}
             onClick={(event) => {
               event.stopPropagation();
+              setLoadError(false);
+              setMediaLoaded(false);
               onRetry(variant.id);
             }}
           >

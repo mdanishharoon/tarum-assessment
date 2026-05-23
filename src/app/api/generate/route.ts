@@ -7,41 +7,6 @@ import type {
   ScheduledItem,
 } from "@/lib/types";
 
-const SAMPLE_VIDEOS = [
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    poster: "https://picsum.photos/seed/bbb-poster/960/540",
-  },
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    poster: "https://picsum.photos/seed/eled-poster/960/540",
-  },
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    poster: "https://picsum.photos/seed/forge-blaze/960/540",
-  },
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    poster: "https://picsum.photos/seed/forge-escape/960/540",
-  },
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    poster: "https://picsum.photos/seed/forge-fun/960/540",
-  },
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    poster: "https://picsum.photos/seed/forge-joy/960/540",
-  },
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-    poster: "https://picsum.photos/seed/forge-melt/960/540",
-  },
-  {
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    poster: "https://picsum.photos/seed/sintel/960/540",
-  },
-];
-
 const MIN_DELAY_MS = 5000;
 const MAX_DELAY_MS = 10000;
 
@@ -71,29 +36,19 @@ function buildItem(
   ratio: AspectRatio,
   index: number,
 ): ScheduledItem {
-  const { width, height } = dimensionsFor(ratio);
+  // Frontend demo — video mode still returns a still image so we don't depend on
+  // any public sample-video bucket (those tend to disappear and hang the loader).
+  const effectiveRatio: AspectRatio = mode === "video" ? "16:9" : ratio;
+  const { width, height } = dimensionsFor(effectiveRatio);
   const seed = seedFromPrompt(prompt, index + 1);
   const delay = MIN_DELAY_MS + Math.random() * (MAX_DELAY_MS - MIN_DELAY_MS);
-  if (mode === "video") {
-    const sample = SAMPLE_VIDEOS[index % SAMPLE_VIDEOS.length];
-    return {
-      id: `${seed}-video`,
-      kind: "video",
-      url: sample.url,
-      poster: sample.poster,
-      width: 16,
-      height: 9,
-      alt: `${prompt} — generated video ${index + 1}`,
-      delay,
-    };
-  }
   return {
-    id: `${seed}-image`,
+    id: `${seed}-${mode}`,
     kind: "image",
     url: `https://picsum.photos/seed/${encodeURIComponent(seed)}/${width}/${height}`,
     width,
     height,
-    alt: `${prompt} — generated image ${index + 1}`,
+    alt: `${prompt} — generated ${mode} ${index + 1}`,
     delay,
   };
 }

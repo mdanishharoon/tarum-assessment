@@ -3,39 +3,21 @@
 import { useRef, useState } from "react";
 import { IconPlus } from "./Icons";
 import styles from "./VideoControls.module.css";
-import type { MwMotion } from "@/lib/my-way/types";
 
 type FrameSlot = { url: string } | null;
 
 type Props = {
   firstFrame: FrameSlot;
   lastFrame: FrameSlot;
-  motion: MwMotion;
   onSetFirstFrame: (url: string | null) => void;
   onSetLastFrame: (url: string | null) => void;
-  onMotionChange: (next: MwMotion) => void;
 };
-
-type MotionCell = { value: MwMotion; row: number; col: number; glyph: string; label: string };
-
-const MOTION_CELLS: MotionCell[] = [
-  { value: "zoom-out", row: 1, col: 1, glyph: "⤡", label: "Zoom out" },
-  { value: "up", row: 1, col: 2, glyph: "↑", label: "Pan up" },
-  { value: "orbit", row: 1, col: 3, glyph: "↻", label: "Orbit" },
-  { value: "left", row: 2, col: 1, glyph: "←", label: "Pan left" },
-  { value: "still", row: 2, col: 2, glyph: "•", label: "Still" },
-  { value: "right", row: 2, col: 3, glyph: "→", label: "Pan right" },
-  { value: "zoom-in", row: 3, col: 1, glyph: "⤢", label: "Zoom in" },
-  { value: "down", row: 3, col: 2, glyph: "↓", label: "Pan down" },
-];
 
 export function VideoControls({
   firstFrame,
   lastFrame,
-  motion,
   onSetFirstFrame,
   onSetLastFrame,
-  onMotionChange,
 }: Props) {
   const firstInputRef = useRef<HTMLInputElement | null>(null);
   const lastInputRef = useRef<HTMLInputElement | null>(null);
@@ -71,28 +53,6 @@ export function VideoControls({
           onUpload={(file) => readFile(file, onSetLastFrame)}
           onClear={() => onSetLastFrame(null)}
         />
-      </div>
-
-      <div
-        className={styles.motion}
-        role="radiogroup"
-        aria-label="Camera motion"
-      >
-        {MOTION_CELLS.map((cell) => (
-          <button
-            key={cell.value}
-            type="button"
-            role="radio"
-            aria-checked={cell.value === motion}
-            aria-label={cell.label}
-            data-active={cell.value === motion}
-            className={styles.motionCell}
-            style={{ gridRow: cell.row, gridColumn: cell.col }}
-            onClick={() => onMotionChange(cell.value)}
-          >
-            <span aria-hidden>{cell.glyph}</span>
-          </button>
-        ))}
       </div>
 
       <div className={styles.sequence}>

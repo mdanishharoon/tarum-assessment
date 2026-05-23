@@ -337,10 +337,8 @@ export function PromptBar({ focusedImage, onClearFocus, onSubmit, hasTurns }: Pr
             <VideoControls
               firstFrame={firstFrame ? { url: firstFrame } : null}
               lastFrame={lastFrame ? { url: lastFrame } : null}
-              motion={motion}
               onSetFirstFrame={setFirstFrame}
               onSetLastFrame={setLastFrame}
-              onMotionChange={setMotion}
             />
           )}
 
